@@ -16,20 +16,38 @@ jobs:
           - 27017:27017
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
       - name: Set up Docker Compose v2
         run: |
           mkdir -p ~/.docker/cli-plugins/
           curl -SL https://github.com/docker/compose/releases/download/v2.29.2/docker-compose-linux-x86_64 -o ~/.docker/cli-plugins/docker-compose
           chmod +x ~/.docker/cli-plugins/docker-compose
           docker compose version
+
+      # Frontend build steps start here
+      - name: Install frontend dependencies
+        run: |
+          cd frontend
+          npm ci
+
+      - name: Build frontend assets
+        run: |
+          cd frontend
+          npm run build
+
+      # Now build backend docker images
       - name: Build all backend services
         run: |
           docker compose build
+
+      # Now build the frontend docker image (dist is guaranteed to exist)
       - name: Build frontend
         run: |
           docker build -t eventmerch-frontend ./frontend
+
       # Uncomment below if you add tests
       # - name: Run backend tests
       #   run: |
