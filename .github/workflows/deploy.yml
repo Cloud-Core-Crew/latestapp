@@ -29,6 +29,12 @@ jobs:
       - name: List frontend directory after build
         run: ls -l frontend
 
+      - name: List root directory before Docker build
+        run: ls -l
+
+      - name: List frontend/dist directory before Docker build
+        run: ls -l frontend/dist
+
       - name: Install Docker Compose
         run: |
           sudo apt-get update
@@ -44,7 +50,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push Docker images
-        run: docker-compose build
+        run: docker-compose build --no-cache
         working-directory: .
 
       # Add your deployment steps here (e.g., push images, deploy to EC2, etc.)
