@@ -1,11 +1,107 @@
-# EventMerch
+# EventMerch App
 
-A full-stack microservices-based event and merchandise platform with a Netflix-inspired UI.
+[![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-## Technologies
-- **Backend:** Node.js, Express, MongoDB (Mongoose), JWT Auth, AWS S3
-- **Frontend:** React, Vite, Framer Motion, Netflix-style theme
-- **DevOps:** .env support, Docker-ready structure
+A full-stack microservices-based event and merchandise platform with a Netflix-inspired UI. Built with React (Vite), Node.js microservices, MongoDB, and Docker. Supports local, Docker, and cloud (AWS) deployment.
+
+---
+
+## Features
+- User authentication (JWT, register/login/logout)
+- Browse and search live events and merchandise (no hardcoded data)
+- Add to cart, update quantities, checkout, and order tracking
+- Bulk seeding for events and merchandise (with imageUrl and price)
+- Responsive, modern UI (dark theme, grid layout, featured items)
+- RESTful APIs for all services
+- DevOps ready: Docker Compose, Kubernetes, AWS S3/CloudFront/EC2, GitHub Actions
+
+---
+
+## Table of Contents
+- [Quick Start (Docker Compose)](#quick-start-docker-compose)
+- [Manual Local Setup](#manual-local-setup)
+- [Seeding Data](#seeding-data)
+- [Project Structure](#project-structure)
+- [Backend Services](#backend-services)
+- [Frontend](#frontend)
+- [DevOps & Deployment](#devops--deployment)
+  - [AWS S3 + CloudFront (Frontend)](#aws-s3--cloudfront-frontend)
+  - [AWS EC2 (Backend)](#aws-ec2-backend)
+  - [MongoDB Atlas](#mongodb-atlas)
+  - [CI/CD with GitHub Actions](#cicd-with-github-actions)
+- [Troubleshooting & FAQ](#troubleshooting--faq)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
+## Quick Start (Docker Compose)
+
+1. **Clone the repository:**
+   ```sh
+   git clone <your-repo-url>
+   cd mercheventapp
+   ```
+2. **Copy `.env.example` to `.env` in each backend service and fill in secrets as needed.**
+3. **Build and start all services:**
+   ```sh
+   docker-compose up --build
+   ```
+4. **Access the app:**
+   - Frontend: http://localhost:5180
+   - API Gateway: http://localhost:5000
+   - All backend services: http://localhost:5001 - 5007
+   - MongoDB: localhost:27017
+
+---
+
+## Manual Local Setup
+
+1. **Install dependencies for each service:**
+   ```sh
+   cd backend/<service>
+   npm install --legacy-peer-deps
+   # Repeat for all backend services
+   cd ../../frontend
+   npm install
+   ```
+2. **Start MongoDB locally** (or use Docker Compose for MongoDB only).
+3. **Start each backend service:**
+   ```sh
+   npm start
+   ```
+4. **Start the frontend:**
+   ```sh
+   npm run dev
+   ```
+5. **Access the app at** http://localhost:5180
+
+---
+
+## Seeding Data
+
+Bulk seed events and merchandise with all required fields (including `imageUrl` and `price`).
+
+- **Events:**
+  ```sh
+  curl -X POST http://localhost:5002/api/events/seed \
+    -H "Content-Type: application/json" \
+    -d '{"events": [{"name": "Cricket Match", "imageUrl": "https://...", "price": 20}, ...]}'
+  ```
+- **Merchandise:**
+  ```sh
+  curl -X POST http://localhost:5003/api/merch/seed \
+    -H "Content-Type: application/json" \
+    -d '{"merch": [{"name": "T-Shirt", "imageUrl": "https://...", "price": 15}, ...]}'
+  ```
+
+Or use PowerShell:
+```powershell
+Invoke-WebRequest -Uri http://localhost:5002/api/events/seed -Method POST -Body '{"events": [...]}' -ContentType 'application/json'
+Invoke-WebRequest -Uri http://localhost:5003/api/merch/seed -Method POST -Body '{"merch": [...]}' -ContentType 'application/json'
+```
+
+---
 
 ## Project Structure
 ```
@@ -39,80 +135,66 @@ Each service has its own README with endpoints and environment variables.
 - Pages: Home, Events, Merchandise, Cart, Checkout, Login
 - Uses Framer Motion for smooth UI
 
-## Setup
-1. Copy `.env.example` to `.env` in each backend service and fill in your secrets.
-2. Install dependencies:
-   ```powershell
-   cd backend/<service>
-   npm install
-   ```
-3. Start each backend service:
-   ```powershell
-   npm start
-   ```
-4. Seed sample data (optional):
-   ```powershell
-   Invoke-WebRequest -Uri http://localhost:5002/api/events/seed -Method POST
-   Invoke-WebRequest -Uri http://localhost:5003/api/merch/seed -Method POST
-   ```
-5. Start the frontend:
-   ```powershell
+---
+
+## DevOps & Deployment
+
+### AWS S3 + CloudFront (Frontend)
+1. **Build the frontend:**
+   ```sh
    cd frontend
-   npm install
-   npm run dev
+   npm run build
    ```
+2. **Upload `frontend/dist` to your S3 bucket.**
+   - Enable static website hosting in S3.
+   - Set index and error documents to `index.html`.
+3. **(Optional) Set up CloudFront:**
+   - Create a CloudFront distribution with your S3 bucket as the origin.
+   - Set default root object to `index.html`.
+   - (Optional) Add a custom domain and SSL via ACM.
 
-## DevOps & Docker Setup
-
-1. **Copy `.env.example` to `.env` in each backend service and fill in your secrets.**
-2. **Build and run all services with Docker Compose:**
-   ```powershell
-   docker-compose up --build
+### AWS EC2 (Backend)
+1. **Launch an EC2 instance (Ubuntu recommended).**
+2. **Install Docker and Docker Compose:**
+   ```sh
+   sudo apt update && sudo apt install -y docker.io docker-compose
    ```
-3. **Access the frontend at** [http://localhost:5180](http://localhost:5180)
-4. **All backend services are available on their respective ports (5000-5007).**
-5. **MongoDB is available on port 27017.**
-
-### Health Checks
-- Each service exposes a `/health` endpoint for monitoring.
-
-### Environment Variables
-- See each service's `.env.example` for required variables.
-
-### Stopping All Services
-```powershell
-docker-compose down
-```
-
-## Testing
-- Each service exposes a `/health` endpoint.
-- Use Postman for API testing.
-
-## Production Nginx Setup
-
-- Use the provided `nginx.conf` for production deployments.
-- Serve the frontend static files from `/usr/share/nginx/html`.
-- All `/api/` requests are proxied to the gateway container.
-- For SSL, add your certificate config to the Nginx server block.
-
-Example Docker run:
-```sh
-docker run -d -p 80:80 -v $(pwd)/nginx.conf:/etc/nginx/nginx.conf:ro -v $(pwd)/frontend/dist:/usr/share/nginx/html:ro nginx:alpine
-```
-
-## Kubernetes Deployment
-
-1. Build Docker images for all services and tag them as `:latest` (or use a registry).
-2. Apply all manifests in the `k8s/` directory:
-   ```powershell
-   kubectl apply -f k8s/
+3. **Clone your repo and set up `.env` files.**
+4. **Run all backend services:**
+   ```sh
+   docker-compose up --build -d
    ```
-3. Access the frontend via the NodePort shown in `kubectl get svc frontend`.
-4. All backend services and MongoDB will be available as Kubernetes services.
+5. **Open required ports in your EC2 security group (5000-5007, 27017, etc).**
 
-**Note:**
-- You may need to create ConfigMaps or Secrets for environment variables.
-- For production, use a LoadBalancer or Ingress for external access.
+### MongoDB Atlas
+- Create a free cluster at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
+- Update all backend `.env` files to use your Atlas connection string.
+
+### CI/CD with GitHub Actions
+- Add a `.github/workflows/deploy.yml` for automated build/test/deploy.
+- Example steps:
+  - Build and test frontend/backend
+  - Deploy frontend to S3
+  - Deploy backend to EC2 (via SSH or ECS)
+
+---
+
+## Troubleshooting & FAQ
+- **Port already in use?** Stop other apps or change ports in `.env`/`docker-compose.yml`.
+- **MongoDB connection errors?** Check your connection string and network/firewall settings.
+- **CORS issues?** The gateway handles CORS; check its config if you see errors.
+- **Frontend not updating?** Rebuild with `npm run build` and re-upload to S3.
+- **Seeding not working?** Ensure backend services are running and use correct endpoint/payload.
+
+---
+
+## Contributing
+- Fork the repo and create a feature branch.
+- Open a pull request with a clear description.
+- For major changes, open an issue first to discuss.
+- Please update tests as appropriate.
+
+---
 
 ## License
 MIT

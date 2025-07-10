@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchOrdersFiltered, cancelOrder } from '../services/api';
+import { fetchOrders, fetchOrdersFiltered, cancelOrder } from '../services/api';
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -12,15 +12,27 @@ const Orders = () => {
 
   const loadOrders = (statusFilter = '') => {
     setLoading(true);
-    fetchOrders()
-      .then(data => {
-        setOrders(data);
-        setLoading(false);
-      })
-      .catch(() => {
-        setError('Failed to load orders.');
-        setLoading(false);
-      });
+    if (statusFilter) {
+      fetchOrdersFiltered(token, statusFilter)
+        .then(data => {
+          setOrders(data);
+          setLoading(false);
+        })
+        .catch(() => {
+          setError('Failed to load orders.');
+          setLoading(false);
+        });
+    } else {
+      fetchOrdersFiltered(token, '')
+        .then(data => {
+          setOrders(data);
+          setLoading(false);
+        })
+        .catch(() => {
+          setError('Failed to load orders.');
+          setLoading(false);
+        });
+    }
   };
 
   useEffect(() => {

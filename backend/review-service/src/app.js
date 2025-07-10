@@ -4,7 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import reviewRoutes from './routes/reviewRoutes.js';
 import authMiddleware from './middleware/authMiddleware.js';
-import logger from '../../logger';
+import logger from './logger.js';
 
 dotenv.config();
 

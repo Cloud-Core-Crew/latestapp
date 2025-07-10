@@ -22,29 +22,16 @@ exports.getEvents = async (req, res) => {
     }
 };
 
-// Seed sample events
+// Seed events with custom data from request body
 exports.seedEvents = async (req, res) => {
     try {
-        const sampleEvents = [
-            {
-                title: 'Summer Music Fest',
-                date: '2025-07-15',
-                description: 'Join us for a night of music, food, and fun under the stars!'
-            },
-            {
-                title: 'Tech Innovators Conference',
-                date: '2025-08-10',
-                description: 'A gathering of the brightest minds in technology and innovation.'
-            },
-            {
-                title: 'Charity Run 5K',
-                date: '2025-09-01',
-                description: 'Run for a cause and support local charities in our annual 5K.'
-            }
-        ];
+        const events = Array.isArray(req.body) ? req.body : [];
+        if (!events.length) {
+            return res.status(400).json({ message: 'Request body must be an array of events.' });
+        }
         await Event.deleteMany({});
-        const inserted = await Event.insertMany(sampleEvents);
-        res.status(201).json({ message: 'Sample events seeded', events: inserted });
+        const inserted = await Event.insertMany(events);
+        res.status(201).json({ message: 'Custom events seeded', events: inserted });
     } catch (error) {
         res.status(500).json({ message: 'Error seeding events', error: error.message });
     }

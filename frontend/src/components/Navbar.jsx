@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button, Box, Typography, Paper, Modal, TextField, Alert } from '@mui/material';
-import { logoutUser, loginUser } from '../services/api';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '../contexts/AuthContext';
+import { loginUser } from '../services/api';
 
 const Navbar = () => {
     const location = useLocation();
@@ -20,7 +20,8 @@ const Navbar = () => {
         e.preventDefault();
         try {
             toast.loading('Logging in...');
-            await login(email, password);
+            const response = await loginUser({ email, password });
+            login(response.user, response.token); // set real user and token
             setShowLoginModal(false);
             navigate('/');
             toast.dismiss();
@@ -32,14 +33,10 @@ const Navbar = () => {
         }
     };
 
-    const logoutHandler = async () => {
-        try {
-            await logout();
-            navigate('/');
-            toast.success('Logged out successfully');
-        } catch (error) {
-            toast.error('Logout failed');
-        }
+    const logoutHandler = () => {
+        logout();
+        navigate('/');
+        toast.success('Logged out successfully');
     };
 
     const closeModal = () => {
@@ -110,17 +107,7 @@ const Navbar = () => {
                         <Button
                             variant="contained"
                             color="primary"
-                            onClick={async () => {
-                                try {
-                                    await logoutUser();
-                                    localStorage.removeItem('token');
-                                    setIsLoggedIn(false);
-                                    navigate('/');
-                                    toast.success('Logged out successfully');
-                                } catch (error) {
-                                    toast.error('Logout failed');
-                                }
-                            }}
+                            onClick={logoutHandler}
                         >
                             Logout
                         </Button>

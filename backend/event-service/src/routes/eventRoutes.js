@@ -6,9 +6,9 @@ const eventController = require('../controllers/eventController');
 router.post('/events', eventController.addEvent);
 
 // Route to get all events
-router.get('/events', eventController.getEvents);
+router.get('/', eventController.getEvents);
 
 // Route to seed sample events
-router.post('/events/seed', eventController.seedEvents);
+router.post('/seed', eventController.seedEvents);
 
 module.exports = router;

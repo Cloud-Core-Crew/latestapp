@@ -6,25 +6,32 @@ const api = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
-  },
-  interceptors: {
-    request: config => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-      return config;
-    },
-    response: error => {
-      if (error.response?.status === 401) {
-        // Handle unauthorized access
-        localStorage.removeItem('token');
-        window.location.href = '/login';
-      }
-      return Promise.reject(error);
-    }
   }
 });
+
+// Add a request interceptor to always attach token if present
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+// Add a response interceptor to handle 401 globally
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
 
 // Auth API calls
 export const registerUser = async (userData) => {
@@ -60,23 +67,23 @@ export const logoutUser = async () => {
 
 // Event API calls
 export const fetchEvents = async () => {
-  const response = await api.get('/events');
+  const response = await api.get('/api/events');
   return response.data;
 };
 
 export const createEvent = async (eventData) => {
-  const response = await api.post('/events', eventData);
+  const response = await api.post('/api/events', eventData);
   return response.data;
 };
 
 // Merch API calls
 export const fetchMerch = async () => {
-  const response = await api.get('/merch');
+  const response = await api.get('/api/merch');
   return response.data;
 };
 
 export const createMerch = async (merchData) => {
-  const response = await api.post('/merch', merchData);
+  const response = await api.post('/api/merch', merchData);
   return response.data;
 };
 

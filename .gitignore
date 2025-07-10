@@ -1,11 +1,6 @@
 # Node modules
 node_modules/
 
-# Environment files
-.env
-.env.local
-.env.*.local
-
 # Build output
 build/
 dist/
@@ -24,6 +19,9 @@ Thumbs.db
 logs/
 *.log
 order-service.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # Test coverage
 coverage/
@@ -38,7 +36,8 @@ frontend/dist/
 
 # Backend build
 backend/*/build/
-backend/*/dist/
 
-# Kubernetes YAML temp ignore
-k8s/*.yaml~
+# By default, ignore env files (remove this line if you want to commit .env)
+# .env
+# .env.local
+# .env.*.local

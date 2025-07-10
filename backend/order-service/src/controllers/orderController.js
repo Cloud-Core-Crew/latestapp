@@ -2,11 +2,13 @@ const Order = require('../models/order.js');
 
 const getOrders = async (req, res) => {
   try {
-    let filter = { userId: req.user._id };
+    let filter = { userId: req.user.id };
     if (req.query.status) {
       filter.status = req.query.status;
     }
+    console.log('Order fetch filter:', filter);
     const orders = await Order.find(filter).sort({ createdAt: -1 });
+    console.log('Orders found:', orders);
     res.json(orders);
   } catch (err) {
     res.status(500).json({ message: 'Error fetching orders' });

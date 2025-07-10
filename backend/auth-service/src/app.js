@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var cors = require('cors');
 var dotenv = require('dotenv');
 var authRoutes = require('./routes/authRoutes');
-const logger = require('../../logger');
+const logger = require('./logger');
 
 dotenv.config();
 

@@ -33,14 +33,9 @@ const Profile = () => {
       });
   }, [user]);
 
-  const handleLogout = async () => {
-    try {
-      await logout();
-      navigate('/');
-    } catch (error) {
-      console.error('Logout error:', error);
-      setError('Failed to logout. Please try again.');
-    }
+  const handleLogout = () => {
+    logout();
+    navigate('/');
   };
 
   if (loading) return <div style={{textAlign:'center',marginTop:'2rem'}}>Loading profile...</div>;

@@ -3,18 +3,20 @@ import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { loginUser } from '../services/api';
 import { toast } from 'react-hot-toast';
+import { useAuth } from '../contexts/AuthContext';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
             const response = await loginUser({ email, password });
-            localStorage.setItem('token', response.token);
+            login(response.user, response.token); // update context and localStorage
             navigate('/'); // Redirect to home after successful login
         } catch (err) {
             setError(err?.response?.data?.message || 'Invalid email or password');

@@ -75,10 +75,20 @@ exports.login = function(req, res) {
 
             const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
             console.log('Login successful, generating token');
-            res.status(200).json({ token });
+            res.status(200).json({ 
+                token, 
+                user: { id: user.id, username: user.username, email: user.email, createdAt: user.createdAt }
+            });
         });
     });
-};;
+};
+
+// User logout
+exports.logoutUser = function(req, res) {
+    // For JWT, logout is handled client-side by deleting the token.
+    // This endpoint exists for frontend compatibility.
+    res.status(200).json({ message: 'Logged out successfully' });
+};
 
 // Export with correct names for routes
 exports.registerUser = exports.register;

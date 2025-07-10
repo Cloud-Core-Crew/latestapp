@@ -4,7 +4,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const orderRoutes = require('./routes/orderRoutes');
 const authMiddleware = require('./middleware/authMiddleware');
-const logger = require('../../logger');
+const logger = require('./logger');
 
 dotenv.config();
 

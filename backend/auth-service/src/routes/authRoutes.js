@@ -1,11 +1,12 @@
 const express = require('express');
-const { registerUser, loginUser } = require('../controllers/authController');
+const { registerUser, loginUser, logoutUser } = require('../controllers/authController');
 const jwtMiddleware = require('../middleware/jwtMiddleware');
 
 const router = express.Router();
 
 router.post('/register', registerUser);
 router.post('/login', loginUser);
+router.post('/logout', logoutUser);
 router.get('/me', jwtMiddleware, (req, res) => {
   if (!req.user) {
     console.error('User not found for token:', req.userId);

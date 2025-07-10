@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const httpProxy = require('express-http-proxy');
+const logger = require('./logger');
 
 const app = express();
 
@@ -11,16 +12,13 @@ app.use(express.urlencoded({ extended: true }));
 
 // Add logging middleware
 app.use((req, res, next) => {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    logger.info(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
     next();
 });
 
 // Proxy configuration
 const authProxy = httpProxy('http://localhost:5001', {
-    proxyReqPathResolver: (req) => {
-        console.log('Proxying auth request:', req.method, req.url);
-        return req.url;
-    },
+    proxyReqPathResolver: (req) => '/api/auth' + req.url,
     onError: (err, req, res) => {
         console.error('Auth proxy error:', err);
         res.status(502).json({
@@ -31,10 +29,7 @@ const authProxy = httpProxy('http://localhost:5001', {
 });
 
 const ordersProxy = httpProxy('http://localhost:5004', {
-    proxyReqPathResolver: (req) => {
-        console.log('Proxying orders request:', req.method, req.url);
-        return req.url;
-    },
+    proxyReqPathResolver: (req) => '/api/orders' + req.url,
     onError: (err, req, res) => {
         console.error('Orders proxy error:', err);
         res.status(502).json({
@@ -44,9 +39,33 @@ const ordersProxy = httpProxy('http://localhost:5004', {
     }
 });
 
+const eventsProxy = httpProxy('http://localhost:5002', {
+    proxyReqPathResolver: (req) => req.originalUrl, // Forward full /api/events path
+    onError: (err, req, res) => {
+        console.error('Events proxy error:', err);
+        res.status(502).json({
+            error: 'Service unavailable',
+            message: 'Failed to connect to events service'
+        });
+    }
+});
+
+const merchProxy = httpProxy('http://localhost:5003', {
+    proxyReqPathResolver: (req) => req.originalUrl, // Forward full /api/merch path
+    onError: (err, req, res) => {
+        console.error('Merch proxy error:', err);
+        res.status(502).json({
+            error: 'Service unavailable',
+            message: 'Failed to connect to merch service'
+        });
+    }
+});
+
 // Routes
 app.use('/api/auth', authProxy);
 app.use('/api/orders', ordersProxy);
+app.use('/api/events', eventsProxy);
+app.use('/api/merch', merchProxy);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

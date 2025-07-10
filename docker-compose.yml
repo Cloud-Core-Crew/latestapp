@@ -112,5 +112,14 @@ services:
     volumes:
       - mongodb_data:/data/db
 
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    ports:
+      - "8080:80"
+    depends_on:
+      - frontend
+
 volumes:
   mongodb_data:

@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const eventRoutes = require('./routes/eventRoutes');
-const logger = require('../../logger');
+const logger = require('./logger');
 
 const app = express();
 

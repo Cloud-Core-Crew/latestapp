@@ -1,12 +1,14 @@
 const express = require('express');
 const cors = require('cors');
 const storageRoutes = require('./routes/storageRoutes');
+const logger = require('./logger');
 
 const app = express();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use((req, res, next) => { logger.info(`${req.method} ${req.url}`); next(); });
 
 // Routes
 app.use('/api/storage', storageRoutes);

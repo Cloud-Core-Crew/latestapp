@@ -6,9 +6,9 @@ const merchController = require('../controllers/merchController');
 router.post('/merch', merchController.addMerch);
 
 // Route to get all merchandise
-router.get('/merch', merchController.getAllMerch);
+router.get('/', merchController.getAllMerch);
 
 // Route to seed sample merchandise
-router.post('/merch/seed', merchController.seedMerch);
+router.post('/seed', merchController.seedMerch);
 
 module.exports = router;

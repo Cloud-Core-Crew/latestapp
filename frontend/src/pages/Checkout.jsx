@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { clearCart } from '../store/slices/cartSlice';
+import { useCart } from '../contexts/CartContext';
 import { useNavigate } from 'react-router-dom';
 import { createOrder } from '../services/api';
 
 const Checkout = () => {
-  const cart = useSelector((state) => state.cart);
-  const dispatch = useDispatch();
+  const { cart, clearCart } = useCart();
   const navigate = useNavigate();
   const [card, setCard] = useState({ number: '', name: '', expiry: '', cvc: '' });
   const [error, setError] = useState('');
@@ -29,11 +27,11 @@ const Checkout = () => {
     }
     try {
       await createOrder({
-        items: cart.items,
-        total: cart.total,
+        items: cart,
+        total: cart.reduce((sum, item) => sum + (item.price * item.qty), 0),
         payment: { ...card, method: 'card' }
       });
-      dispatch(clearCart());
+      clearCart();
       navigate('/order-confirmation');
     } catch (err) {
       console.error('Order creation error:', err);
@@ -41,7 +39,7 @@ const Checkout = () => {
     }
   };
 
-  if (!cart.items.length) {
+  if (!cart.length) {
     return (
       <div style={{ maxWidth: '900px', margin: '2rem auto', textAlign: 'center' }}>
         <h1 style={{ fontSize: '2.5rem', fontWeight: 900, letterSpacing: 2, marginBottom: '1.5rem' }}>Checkout</h1>
@@ -63,8 +61,8 @@ const Checkout = () => {
           </tr>
         </thead>
         <tbody>
-          {cart.items.map((item) => (
-            <tr key={item._id + item.type}>
+          {cart.map((item) => (
+            <tr key={item.id}>
               <td>{item.name || item.title}</td>
               <td>{item.type}</td>
               <td>{item.qty}</td>
@@ -73,7 +71,7 @@ const Checkout = () => {
           ))}
         </tbody>
       </table>
-      <h2 style={{ marginBottom: '1rem' }}>Total: ${cart.total}</h2>
+      <h2 style={{ marginBottom: '1rem' }}>Total: ${cart.reduce((sum, item) => sum + (item.price * item.qty), 0)}</h2>
       <div style={{ background: '#222', borderRadius: 8, padding: '2rem', margin: '1rem auto', maxWidth: 400 }}>
         <h3 style={{ color: '#e50914', marginBottom: 16 }}>Payment Method</h3>
         <input
