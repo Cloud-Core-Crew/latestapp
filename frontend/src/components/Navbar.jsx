@@ -4,6 +4,7 @@ import { Button, Box, Typography, Paper, Modal, TextField, Alert } from '@mui/ma
 import { toast } from 'react-hot-toast';
 import { useAuth } from '../contexts/AuthContext';
 import { loginUser } from '../services/api';
+import { useTheme } from '../contexts/ThemeContext';
 
 const Navbar = () => {
     const location = useLocation();
@@ -13,6 +14,7 @@ const Navbar = () => {
     const [password, setPassword] = useState('');
     const [loginError, setLoginError] = useState('');
     const { user, login, logout } = useAuth();
+    const { theme, toggleTheme } = useTheme();
 
     const isLoggedIn = !!user;
 
@@ -55,12 +57,16 @@ const Navbar = () => {
             bgcolor: 'background.paper',
             boxShadow: 1
         }}>
-            <Typography variant="h4" sx={{
-                color: 'primary.main',
+            <Typography variant="h4"
+              style={{
+                color: theme === 'dark' ? '#b20710' : '#00F5D4', // Dark red in dark mode, neon aqua in light mode
                 fontWeight: 'bold',
                 letterSpacing: 2,
-                m: 0
-            }}>EventMerch</Typography>
+                margin: 0,
+                textShadow: theme === 'dark' ? '0 1px 8px #000' : '0 0 8px #00F5D4, 0 0 16px #00F5D4',
+                transition: 'color 0.2s, text-shadow 0.2s'
+              }}
+            >EventMerch</Typography>
             <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                 <Link to="/" sx={{ textDecoration: 'none', color: 'text.primary' }}>
                     Home
@@ -113,6 +119,16 @@ const Navbar = () => {
                         </Button>
                     </>
                 )}
+
+                <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={toggleTheme}
+                    sx={{ ml: 2 }}
+                    title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                >
+                    {theme === 'dark' ? '🌙' : '☀️'}
+                </Button>
 
                 {showLoginModal && (
                     <Modal

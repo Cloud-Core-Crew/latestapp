@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeItem, clearCart } from '../store/slices/cartSlice';
 import { useNavigate } from 'react-router-dom';
+import { Skeleton } from '@mui/material';
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
@@ -19,6 +20,14 @@ const Cart = () => {
   const handleCheckout = () => {
     navigate('/checkout');
   };
+
+  if (cart.loading) return (
+    <div style={{textAlign:'center',marginTop:'2rem'}}>
+      <Skeleton variant="rectangular" width={600} height={40} style={{margin:'0 auto 1rem'}} />
+      <Skeleton variant="rectangular" width={800} height={60} style={{margin:'0 auto 1rem'}} />
+      <Skeleton variant="rectangular" width={800} height={60} style={{margin:'0 auto 1rem'}} />
+    </div>
+  );
 
   return (
     <div style={{ maxWidth: '900px', margin: '2rem auto', textAlign: 'center' }}>

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Skeleton } from '@mui/material';
 import { fetchOrders, fetchOrdersFiltered, cancelOrder } from '../services/api';
 
 const Orders = () => {
@@ -61,7 +62,14 @@ const Orders = () => {
     loadOrders(e.target.value);
   };
 
-  if (loading) return <div style={{textAlign:'center',marginTop:'2rem'}}>Loading orders...</div>;
+  if (loading) return (
+    <div style={{textAlign:'center',marginTop:'2rem'}}>
+      <Skeleton variant="rectangular" width={600} height={40} style={{margin:'0 auto 1rem'}} />
+      <Skeleton variant="rectangular" width={800} height={60} style={{margin:'0 auto 1rem'}} />
+      <Skeleton variant="rectangular" width={800} height={60} style={{margin:'0 auto 1rem'}} />
+      <Skeleton variant="rectangular" width={800} height={60} style={{margin:'0 auto 1rem'}} />
+    </div>
+  );
   if (error) return <div style={{color:'#e50914',textAlign:'center',marginTop:'2rem'}}>{error}</div>;
 
   return (

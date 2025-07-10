@@ -61,11 +61,23 @@ const merchProxy = httpProxy('http://localhost:5003', {
     }
 });
 
+const reviewsProxy = httpProxy('http://localhost:5006', {
+    proxyReqPathResolver: (req) => req.originalUrl, // Forward full /api/reviews path
+    onError: (err, req, res) => {
+        console.error('Reviews proxy error:', err);
+        res.status(502).json({
+            error: 'Service unavailable',
+            message: 'Failed to connect to review service'
+        });
+    }
+});
+
 // Routes
 app.use('/api/auth', authProxy);
 app.use('/api/orders', ordersProxy);
 app.use('/api/events', eventsProxy);
 app.use('/api/merch', merchProxy);
+app.use('/api/reviews', reviewsProxy);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

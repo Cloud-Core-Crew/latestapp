@@ -16,7 +16,6 @@ services:
       - order-service
       - payment-service
       - review-service
-      - storage-service
       - mongodb
 
   auth-service:
@@ -82,17 +81,6 @@ services:
       - "5006:5006"
     env_file:
       - ./backend/review-service/.env
-    depends_on:
-      - mongodb
-
-  storage-service:
-    build:
-      context: ./backend/storage-service
-      dockerfile: Dockerfile
-    ports:
-      - "5007:5007"
-    env_file:
-      - ./backend/storage-service/.env
     depends_on:
       - mongodb
 

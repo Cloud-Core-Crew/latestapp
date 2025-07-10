@@ -2,20 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { fetchEvents, fetchMerch } from '../services/api';
-
-const cardStyle = {
-  background: '#222',
-  borderRadius: 8,
-  padding: 18,
-  minWidth: 250,
-  maxWidth: 270,
-  flex: '0 0 250px',
-  marginBottom: 8,
-};
+import { Skeleton } from '@mui/material';
 
 const Home = () => {
   const { addToCart, isInCart, getQty, increaseQty, decreaseQty } = useCart();
+  const { theme } = useTheme();
   const [featuredEvents, setFeaturedEvents] = useState([]);
   const [featuredMerch, setFeaturedMerch] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -36,7 +29,38 @@ const Home = () => {
     loadData();
   }, []);
 
-  if (loading) return <div style={{textAlign:'center',marginTop:'2rem'}}>Loading...</div>;
+  const cardBorderColor = theme === 'light' ? '#00F5D4' : '#b20710';
+
+  const cardStyle = {
+    background: theme === 'light' ? '#fff' : '#222',
+    color: theme === 'light' ? '#222' : '#fff',
+    borderRadius: 8,
+    padding: 18,
+    minWidth: 250,
+    maxWidth: 270,
+    flex: '0 0 250px',
+    marginBottom: 8,
+    boxShadow: theme === 'light' ? '0 2px 16px #00F5D420' : '0 2px 16px #0008',
+    border: `1.5px solid ${cardBorderColor}`,
+    transition: 'background 0.2s, color 0.2s, border 0.2s',
+  };
+
+  if (loading) return (
+    <div style={{textAlign:'center',marginTop:'2rem',display:'flex',gap:'2rem',justifyContent:'center'}}>
+      <div>
+        <Skeleton variant="rectangular" width={270} height={180} style={{margin:'0 auto 1rem'}} />
+        <Skeleton variant="text" width={200} height={40} style={{margin:'0 auto 1rem'}} />
+        <Skeleton variant="text" width={260} height={30} style={{margin:'0 auto 1rem'}} />
+        <Skeleton variant="rounded" width={120} height={40} style={{margin:'0 auto 1rem'}} />
+      </div>
+      <div>
+        <Skeleton variant="rectangular" width={270} height={180} style={{margin:'0 auto 1rem'}} />
+        <Skeleton variant="text" width={200} height={40} style={{margin:'0 auto 1rem'}} />
+        <Skeleton variant="text" width={260} height={30} style={{margin:'0 auto 1rem'}} />
+        <Skeleton variant="rounded" width={120} height={40} style={{margin:'0 auto 1rem'}} />
+      </div>
+    </div>
+  );
 
   return (
     <div style={{ maxWidth: '1100px', margin: '2rem auto', textAlign: 'center' }}>

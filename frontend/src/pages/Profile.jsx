@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { fetchProfile } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { Skeleton } from '@mui/material';
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
@@ -38,7 +39,13 @@ const Profile = () => {
     navigate('/');
   };
 
-  if (loading) return <div style={{textAlign:'center',marginTop:'2rem'}}>Loading profile...</div>;
+  if (loading) return (
+    <div style={{textAlign:'center',marginTop:'2rem'}}>
+      <Skeleton variant="circular" width={80} height={80} style={{margin:'0 auto 1rem'}} />
+      <Skeleton variant="text" width={200} height={40} style={{margin:'0 auto 1rem'}} />
+      <Skeleton variant="rectangular" width={300} height={60} style={{margin:'0 auto 1rem'}} />
+    </div>
+  );
   if (error) return <div style={{color:'#e50914',textAlign:'center',marginTop:'2rem'}}>{error}</div>;
 
   return (

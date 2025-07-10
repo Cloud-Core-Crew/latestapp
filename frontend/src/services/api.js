@@ -87,16 +87,6 @@ export const createMerch = async (merchData) => {
   return response.data;
 };
 
-// Storage API calls
-export const uploadImage = async (formData) => {
-  const response = await api.post('/storage/upload', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
-  return response.data;
-};
-
 // Order API calls
 export const createOrder = async (order) => {
   const token = localStorage.getItem('token');
@@ -120,6 +110,65 @@ export const cancelOrder = async (orderId) => {
 
 export const fetchOrdersFiltered = async (token, status) => {
   const response = await api.get(`/api/orders${status ? `?status=${status}` : ''}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+// Review API calls
+export const fetchReviews = async (itemId, type, sort = 'newest', filter = {}) => {
+  // type: 'event' or 'merch', itemId: eventId or merchId
+  // sort: 'newest', 'oldest', 'highest', 'lowest', 'mostUpvoted'
+  // filter: { minRating, userId, ... }
+  let query = `/api/reviews?type=${type}&itemId=${itemId}&sort=${sort}`;
+  if (filter.minRating) query += `&minRating=${filter.minRating}`;
+  if (filter.userId) query += `&userId=${filter.userId}`;
+  const response = await api.get(query);
+  return response.data;
+};
+
+export const createReview = async (reviewData) => {
+  // reviewData: { itemId, type, rating, comment }
+  const token = localStorage.getItem('token');
+  if (!token) return Promise.reject(new Error('No token found'));
+  const response = await api.post('/api/reviews', reviewData, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const editReview = async (reviewId, reviewData) => {
+  // reviewData: { rating, comment }
+  const token = localStorage.getItem('token');
+  if (!token) return Promise.reject(new Error('No token found'));
+  const response = await api.put(`/api/reviews/${reviewId}`, reviewData, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const deleteReview = async (reviewId) => {
+  const token = localStorage.getItem('token');
+  if (!token) return Promise.reject(new Error('No token found'));
+  const response = await api.delete(`/api/reviews/${reviewId}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const upvoteReview = async (reviewId) => {
+  const token = localStorage.getItem('token');
+  if (!token) return Promise.reject(new Error('No token found'));
+  const response = await api.post(`/api/reviews/${reviewId}/upvote`, {}, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const downvoteReview = async (reviewId) => {
+  const token = localStorage.getItem('token');
+  if (!token) return Promise.reject(new Error('No token found'));
+  const response = await api.post(`/api/reviews/${reviewId}/downvote`, {}, {
     headers: { Authorization: `Bearer ${token}` }
   });
   return response.data;

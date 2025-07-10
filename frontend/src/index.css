@@ -1,23 +1,23 @@
-/* Netflix-style dark theme and animation base styles */
+/* Aqua/purple/pink modern theme */
 body {
-  background: #141414;
-  color: #fff;
+  background: #0B0F15;
+  color: #F8F8F8;
   font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
   margin: 0;
   padding: 0;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: #fff;
+  color: #0FFFD3;
 }
 
 a {
-  color: #e50914;
+  color: #FF66C4;
   text-decoration: none;
   transition: color 0.2s;
 }
 a:hover {
-  color: #fff;
+  color: #F15BB5;
 }
 
 ul {
@@ -26,20 +26,21 @@ ul {
 }
 
 li {
-  background: #222;
+  background: #1A1C20;
   margin: 1rem 0;
   padding: 1rem;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
   transition: transform 0.2s, box-shadow 0.2s;
+  color: #F8F8F8;
 }
 li:hover {
   transform: scale(1.03);
-  box-shadow: 0 4px 16px rgba(229,9,20,0.2);
+  box-shadow: 0 4px 16px rgba(241,91,181,0.15);
 }
 
 .navbar {
-  background: #181818;
+  background: #1A1C20;
   padding: 1rem 2rem;
   display: flex;
   align-items: center;
@@ -48,7 +49,7 @@ li:hover {
 }
 
 .navbar a {
-  color: #fff;
+  color: #00F5D4;
   margin: 0 1rem;
   font-weight: 500;
   letter-spacing: 1px;
@@ -56,49 +57,119 @@ li:hover {
 }
 
 .navbar a.active, .navbar a:hover {
-  color: #e50914;
-}
-
-/* Carousel styles */
-.carousel {
-  display: flex;
-  overflow-x: auto;
-  gap: 1rem;
-  padding: 1rem 0;
-  scroll-behavior: smooth;
-}
-
-.carousel::-webkit-scrollbar {
-  display: none;
-}
-
-.carousel-item {
-  min-width: 300px;
-  background: #222;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.carousel-item:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 16px rgba(229,9,20,0.2);
+  color: #F15BB5;
 }
 
 /* Button styles */
 button {
-  background: #e50914;
-  color: #fff;
+  background: #0FFFD3;
+  color: #0B0F15;
   border: none;
   border-radius: 4px;
   padding: 0.5rem 1.2rem;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, color 0.2s;
 }
 button:hover {
-  background: #b0060f;
+  background: #F15BB5;
+  color: #fff;
+}
+
+/* Card/Surface */
+.card, .surface, .MuiPaper-root {
+  background: #1A1C20 !important;
+  color: #F8F8F8 !important;
+}
+
+/* Secondary/Accent elements */
+.secondary {
+  color: #C084FC;
+}
+.accent {
+  color: #FF66C4;
+}
+
+.text-secondary {
+  color: #BBB;
+}
+
+/* Light theme styles */
+body[data-theme='light'] {
+  background: #F0F0F0;
+  color: #0A0A0A;
+}
+body[data-theme='light'] p,
+body[data-theme='light'] span,
+body[data-theme='light'] div,
+body[data-theme='light'] td,
+body[data-theme='light'] th {
+  color: #0A0A0A !important;
+}
+body[data-theme='light'] h1,
+body[data-theme='light'] h2,
+body[data-theme='light'] h3,
+body[data-theme='light'] h4,
+body[data-theme='light'] h5,
+body[data-theme='light'] h6 {
+  color: #00F5D4 !important;
+}
+body[data-theme='light'] .MuiTypography-root {
+  color: #0A0A0A !important;
+}
+body[data-theme='light'] button {
+  background: #00F5D4 !important;
+  color: #0A0A0A !important;
+}
+body[data-theme='light'] button:hover {
+  background: #F15BB5 !important;
+  color: #fff !important;
+}
+body[data-theme='light'] a {
+  color: #F15BB5;
+}
+body[data-theme='light'] a:hover {
+  color: #9B5DE5;
+}
+body[data-theme='light'] .navbar {
+  background: #FFFFFF;
+  color: #0A0A0A;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+body[data-theme='light'] li {
+  background: #FFFFFF;
+  color: #0A0A0A;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+body[data-theme='light'] .navbar a {
+  color: #00F5D4;
+}
+body[data-theme='light'] .navbar a.active, body[data-theme='light'] .navbar a:hover {
+  color: #F15BB5;
+}
+
+body[data-theme='light'] .card, body[data-theme='light'] .surface, body[data-theme='light'] .MuiPaper-root {
+  background: #FFFFFF !important;
+  color: #0A0A0A !important;
+}
+
+body[data-theme='light'] .secondary {
+  color: #9B5DE5;
+}
+body[data-theme='light'] .accent {
+  color: #F15BB5;
+}
+body[data-theme='light'] .text-secondary {
+  color: #555;
+}
+
+/* Divider */
+.divider {
+  border-bottom: 1px solid #2D3748;
+}
+body[data-theme='light'] .divider {
+  border-bottom: 1px solid #E5E7EB;
 }
 
 /* Responsive */
@@ -108,10 +179,49 @@ button:hover {
     align-items: flex-start;
     padding: 1rem;
   }
-  .carousel-item {
-    min-width: 220px;
-  }
   li {
     padding: 0.7rem;
   }
+}
+
+/* Carousel and Item Cards */
+.carousel-item, .item-card, .event-card, .merch-card {
+  background: #1A1C20;
+  color: #F8F8F8;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px #9B5DE520;
+  padding: 18px;
+  transition: box-shadow 0.2s, background 0.2s, color 0.2s, transform 0.2s;
+  cursor: default;
+}
+.carousel-item:hover, .item-card:hover, .event-card:hover, .merch-card:hover {
+  box-shadow: 0 8px 32px #F15BB580, 0 0 0 2px #00F5D4;
+  background: #23242a;
+  color: #00F5D4;
+  transform: translateY(-6px) scale(1.04);
+  border: 1.5px solid #F15BB5;
+}
+.carousel-item button, .item-card button, .event-card button, .merch-card button {
+  cursor: pointer;
+}
+
+body[data-theme='light'] .carousel-item,
+body[data-theme='light'] .item-card,
+body[data-theme='light'] .event-card,
+body[data-theme='light'] .merch-card {
+  background: #FFFFFF;
+  color: #0A0A0A;
+  box-shadow: 0 2px 16px #9B5DE510;
+  border: none;
+  text-shadow: none;
+}
+body[data-theme='light'] .carousel-item:hover,
+body[data-theme='light'] .item-card:hover,
+body[data-theme='light'] .event-card:hover,
+body[data-theme='light'] .merch-card:hover {
+  box-shadow: 0 8px 32px #F15BB580, 0 0 0 2px #00F5D4;
+  background: #F5F5F5;
+  color: #9B5DE5;
+  text-shadow: none;
+  border: 1.5px solid #F15BB5;
 }

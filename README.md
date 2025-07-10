@@ -50,7 +50,7 @@ A full-stack microservices-based event and merchandise platform with a Netflix-i
 4. **Access the app:**
    - Frontend: http://localhost:5180
    - API Gateway: http://localhost:5000
-   - All backend services: http://localhost:5001 - 5007
+   - All backend services: http://localhost:5001 - 5006
    - MongoDB: localhost:27017
 
 ---
@@ -113,7 +113,6 @@ event-merch-app/
 │   ├── order-service/
 │   ├── payment-service/
 │   ├── review-service/
-│   └── storage-service/
 ├── frontend/  (React + Vite)
 ├── docker-compose.yml
 ├── .env.example
@@ -127,8 +126,7 @@ Each service has its own README with endpoints and environment variables.
 - **merch-service:** Merch CRUD, image upload, seeding
 - **order-service:** Orders
 - **payment-service:** Payments
-- **review-service:** Reviews
-- **storage-service:** AWS S3 uploads
+- **review-service:** User reviews for events and merchandise
 
 ## Frontend
 - Netflix-style dark theme, carousels, and animations

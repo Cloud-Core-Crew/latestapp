@@ -8,18 +8,53 @@ const Checkout = () => {
   const navigate = useNavigate();
   const [card, setCard] = useState({ number: '', name: '', expiry: '', cvc: '' });
   const [error, setError] = useState('');
+  const [nameError, setNameError] = useState('');
+  const [numberError, setNumberError] = useState('');
+  const [expiryError, setExpiryError] = useState('');
+  const [cvcError, setCvcError] = useState('');
 
   const handleCardChange = (e) => {
     setCard({ ...card, [e.target.name]: e.target.value });
   };
 
+  const validate = () => {
+    let valid = true;
+    setNameError('');
+    setNumberError('');
+    setExpiryError('');
+    setCvcError('');
+    if (!card.name) {
+      setNameError('Cardholder name is required.');
+      valid = false;
+    }
+    if (!card.number) {
+      setNumberError('Card number is required.');
+      valid = false;
+    } else if (!/^\d{16,19}$/.test(card.number.replace(/\s/g, ''))) {
+      setNumberError('Enter a valid card number (16-19 digits).');
+      valid = false;
+    }
+    if (!card.expiry) {
+      setExpiryError('Expiry is required.');
+      valid = false;
+    } else if (!/^\d{2}\/\d{2}$/.test(card.expiry)) {
+      setExpiryError('Format: MM/YY');
+      valid = false;
+    }
+    if (!card.cvc) {
+      setCvcError('CVC is required.');
+      valid = false;
+    } else if (!/^\d{3,4}$/.test(card.cvc)) {
+      setCvcError('CVC must be 3 or 4 digits.');
+      valid = false;
+    }
+    return valid;
+  };
+
   const handlePlaceOrder = async () => {
     setError('');
+    if (!validate()) return;
     // Simple validation
-    if (!card.number || !card.name || !card.expiry || !card.cvc) {
-      setError('Please fill in all card details.');
-      return;
-    }
     const token = localStorage.getItem('token');
     if (!token) {
       setError('You must be logged in to place an order.');
@@ -80,40 +115,48 @@ const Checkout = () => {
           placeholder="Cardholder Name"
           value={card.name}
           onChange={handleCardChange}
-          style={{ width: '100%', marginBottom: '1rem', padding: '0.5rem' }}
+          style={{ width: '100%', marginBottom: '0.25rem', padding: '0.5rem' }}
           required
         />
+        <div style={{ color: 'orange', fontSize: 12, minHeight: 18 }}>{nameError || 'Enter the name on your card.'}</div>
         <input
           type="text"
           name="number"
           placeholder="Card Number"
           value={card.number}
           onChange={handleCardChange}
-          style={{ width: '100%', marginBottom: '1rem', padding: '0.5rem' }}
+          style={{ width: '100%', marginBottom: '0.25rem', padding: '0.5rem' }}
           maxLength={19}
           required
         />
+        <div style={{ color: 'orange', fontSize: 12, minHeight: 18 }}>{numberError || '16-19 digits, numbers only.'}</div>
         <div style={{ display: 'flex', gap: 8 }}>
-          <input
-            type="text"
-            name="expiry"
-            placeholder="MM/YY"
-            value={card.expiry}
-            onChange={handleCardChange}
-            style={{ flex: 1, marginBottom: '1rem', padding: '0.5rem' }}
-            maxLength={5}
-            required
-          />
-          <input
-            type="text"
-            name="cvc"
-            placeholder="CVC"
-            value={card.cvc}
-            onChange={handleCardChange}
-            style={{ flex: 1, marginBottom: '1rem', padding: '0.5rem' }}
-            maxLength={4}
-            required
-          />
+          <div style={{ flex: 1 }}>
+            <input
+              type="text"
+              name="expiry"
+              placeholder="MM/YY"
+              value={card.expiry}
+              onChange={handleCardChange}
+              style={{ width: '100%', marginBottom: '0.25rem', padding: '0.5rem' }}
+              maxLength={5}
+              required
+            />
+            <div style={{ color: 'orange', fontSize: 12, minHeight: 18 }}>{expiryError || 'Format: MM/YY'}</div>
+          </div>
+          <div style={{ flex: 1 }}>
+            <input
+              type="text"
+              name="cvc"
+              placeholder="CVC"
+              value={card.cvc}
+              onChange={handleCardChange}
+              style={{ width: '100%', marginBottom: '0.25rem', padding: '0.5rem' }}
+              maxLength={4}
+              required
+            />
+            <div style={{ color: 'orange', fontSize: 12, minHeight: 18 }}>{cvcError || '3 or 4 digits.'}</div>
+          </div>
         </div>
         {error && <p style={{ color: 'red', marginBottom: 8 }}>{error}</p>}
       </div>
