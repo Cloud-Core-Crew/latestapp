@@ -37,6 +37,7 @@ jobs:
 
       - name: Build and push Docker images
         run: docker-compose build
+        working-directory: .
 
       # Add your deployment steps here (e.g., push images, deploy to EC2, etc.)
       # - name: Deploy to AWS EC2
