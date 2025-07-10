@@ -1,7 +1,7 @@
 # Build stage
 FROM node:18-slim AS builder
 WORKDIR /app
-COPY package.json yarn.lock ./
+COPY package.json ./
 RUN corepack enable && yarn install --frozen-lockfile
 COPY . .
 RUN yarn build
