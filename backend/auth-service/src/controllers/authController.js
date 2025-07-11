@@ -1,6 +1,7 @@
 const User = require('../models/user_new');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const client = require('prom-client');
 
 // User registration
 exports.register = async function(req, res) {
@@ -71,6 +72,18 @@ exports.login = function(req, res) {
             if (!isMatch) {
                 console.log('Invalid credentials');
                 return res.status(401).json({ message: 'Invalid credentials' });
+            }
+
+            // Increment Prometheus login counter
+            if (client.register.getSingleMetric('auth_successful_logins_total')) {
+                client.register.getSingleMetric('auth_successful_logins_total').inc();
+            } else {
+                // Define if not already defined (for hot reload/dev)
+                const loginCounter = new client.Counter({
+                    name: 'auth_successful_logins_total',
+                    help: 'Total number of successful logins'
+                });
+                loginCounter.inc();
             }
 
             const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });

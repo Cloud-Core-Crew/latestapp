@@ -7,6 +7,7 @@ EventMerch is a full-stack microservices-based application designed to manage ev
 - **React** (with Vite): Fast, modern UI development
 - **Material UI**: Components, Skeletons, and icons
 - **Axios**: HTTP client for API requests
+- **Prometheus & Grafana**: For monitoring and dashboards
 
 ## Key Features
 
@@ -16,6 +17,7 @@ EventMerch is a full-stack microservices-based application designed to manage ev
 - **Material UI Skeletons**: Loading states for all main pages
 - **Form validation**: Helper text and error messages for all forms
 - **Responsive design**: Works on all devices
+- **Business metrics dashboards**: Visualize logins, orders, reviews, and more in Grafana
 
 ## Getting Started
 
@@ -38,13 +40,14 @@ EventMerch is a full-stack microservices-based application designed to manage ev
 
 ### Running the Application
 
-To start the development server:
+- For local dev: `npm run dev`
+- For Docker/Kubernetes: see main README for deployment and monitoring instructions.
 
-```sh
-npm run dev
-```
+### Monitoring & Dashboards
 
-The app will be available at `http://localhost:5180` (or another port if 5180 is in use).
+- All backend services expose `/metrics` endpoints for Prometheus.
+- Grafana dashboards can be imported to visualize business metrics (see main README for JSON example).
+- Access Grafana at http://localhost:3000 (port-forward if needed).
 
 ### Folder Structure
 

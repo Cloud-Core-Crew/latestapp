@@ -6,11 +6,13 @@ The Event Service is a microservice responsible for managing events within the E
 ## Features
 - Add new events
 - Retrieve a list of events
+- Prometheus `/metrics` endpoint for monitoring
 
 ## Technologies Used
 - Node.js
 - Express
 - MongoDB (via Mongoose)
+- prom-client (Prometheus metrics)
 
 ## Setup Instructions
 1. Clone the repository:
@@ -57,6 +59,10 @@ The Event Service is a microservice responsible for managing events within the E
 - **Endpoint:** `GET /api/events`
 - **Response:**
   - **200 OK**: Returns an array of event objects.
+
+## Monitoring
+- Prometheus scrapes `/metrics` endpoint (see k8s/event-service.yaml)
+- Visualize metrics in Grafana (see main README)
 
 ## Testing
 To run tests, use the following command:

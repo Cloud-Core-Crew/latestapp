@@ -9,6 +9,7 @@ The Merch Service is a microservice responsible for managing merchandise related
 - Add new merchandise items
 - Retrieve a list of merchandise items
 - Integration with MongoDB for data storage
+- Prometheus `/metrics` endpoint for monitoring
 
 ## Setup Instructions
 
@@ -39,6 +40,10 @@ The Merch Service is a microservice responsible for managing merchandise related
    ```bash
    npm start
    ```
+
+## Monitoring
+- Prometheus scrapes `/metrics` endpoint (see k8s/merch-service.yaml)
+- Visualize metrics in Grafana (see main README)
 
 ## API Endpoints
 

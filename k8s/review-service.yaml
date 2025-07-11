@@ -11,11 +11,15 @@ spec:
     metadata:
       labels:
         app: review-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "5006"
     spec:
       containers:
         - name: review-service
-          image: review-service:latest
-          imagePullPolicy: Never
+          image: rajatsood1/review-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 5006
           envFrom:

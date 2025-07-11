@@ -11,6 +11,7 @@ The EventMerch gateway service is built using Node.js and Express. It serves as 
 - **Routing**: The gateway routes requests to the appropriate backend services based on the API endpoints.
 - **Middleware**: It can implement middleware for logging, error handling, and authentication.
 - **Scalability**: The microservices architecture allows for easy scaling of individual services as needed.
+- **Prometheus metrics**: Exposes `/metrics` endpoint for monitoring gateway traffic.
 
 ## Setup Instructions
 
@@ -38,8 +39,14 @@ The gateway service routes requests to the following services:
 
 - **Auth Service**: Handles user registration and login.
 - **Event Service**: Manages events, including adding and retrieving events.
-- **Merch Service**: Manages merchandise, including adding and retrieving items.
-- **Storage Service**: Handles image uploads to AWS S3.
+- **Merch Service**: Manages merchandise items.
+- **Order Service**: Handles order creation and retrieval.
+- **Payment Service**: Simulates payments.
+- **Review Service**: Handles reviews.
+
+## Monitoring
+- Prometheus scrapes `/metrics` endpoint (see k8s/gateway.yaml)
+- Visualize metrics in Grafana (see main README)
 
 ## Contributing
 

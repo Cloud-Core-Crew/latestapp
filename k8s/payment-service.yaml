@@ -11,11 +11,15 @@ spec:
     metadata:
       labels:
         app: payment-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "5005"
     spec:
       containers:
         - name: payment-service
-          image: payment-service:latest
-          imagePullPolicy: Never
+          image: rajatsood1/payment-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 5005
           envFrom:

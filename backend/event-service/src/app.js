@@ -4,13 +4,16 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const eventRoutes = require('./routes/eventRoutes');
 const logger = require('./logger');
+const client = require('prom-client');
 
 const app = express();
+const register = new client.Registry();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use((req, res, next) => { logger.info(`${req.method} ${req.url}`); next(); });
+client.collectDefaultMetrics({ register });
 
 // Database connection
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -19,6 +22,12 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 
 // Routes
 app.use('/api/events', eventRoutes);
+
+// Prometheus metrics endpoint
+app.get('/metrics', async (req, res) => {
+  res.set('Content-Type', register.contentType);
+  res.end(await register.metrics());
+});
 
 // Health check endpoint
 app.get('/health', (req, res) => {

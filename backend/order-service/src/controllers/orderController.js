@@ -1,4 +1,14 @@
 const Order = require('../models/order.js');
+const client = require('prom-client');
+
+const orderCounter = new client.Counter({
+  name: 'orders_created_total',
+  help: 'Total number of orders created'
+});
+const orderCancelCounter = new client.Counter({
+  name: 'orders_cancelled_total',
+  help: 'Total number of orders cancelled'
+});
 
 const getOrders = async (req, res) => {
   try {
@@ -38,6 +48,7 @@ const addOrder = async (req, res) => {
       createdAt: new Date()
     });
     await newOrder.save();
+    orderCounter.inc(); // Increment order created metric
     console.log('Order created:', newOrder);
     res.status(201).json(newOrder);
   } catch (err) {
@@ -63,6 +74,7 @@ const cancelOrder = async (req, res) => {
     if (order.status === 'cancelled') return res.status(400).json({ message: 'Order already cancelled' });
     order.status = 'cancelled';
     await order.save();
+    orderCancelCounter.inc(); // Increment order cancelled metric
     res.json({ message: 'Order cancelled', order });
   } catch (err) {
     console.error('Order cancellation error:', err);

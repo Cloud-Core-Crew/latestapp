@@ -62,43 +62,46 @@ const Events = withAuthUser(({ user }) => {
                         transition={{ delay: idx * 0.1, duration: 0.5 }}
                         whileHover={{ scale: 1.07 }}
                         style={{
-                            width: '100%',
-                            maxWidth: 320,
-                            minWidth: 220,
+                            minWidth: 260,
+                            maxWidth: 300,
+                            minHeight: 500,
+                            maxHeight: 800,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between',
+                            alignItems: 'flex-start',
                             borderRadius: 8,
                             boxShadow: theme === 'light' ? '0 2px 16px #00F5D420' : '0 2px 12px #9B5DE520',
                             border: `1.5px solid ${cardBorderColor}`,
                             background: theme === 'light' ? '#fff' : '#222',
                             color: theme === 'light' ? '#222' : '#fff',
                             padding: 18,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
+                            gap: 18,
+                            marginBottom: 18,
                             transition: 'background 0.2s, color 0.2s, border 0.2s',
+                            overflow: 'hidden',
                         }}
                     >
-                        <div style={{fontSize:'2rem',marginBottom:4}} title="Event">🎫</div>
-                        <h2 style={{color:'#e50914', fontSize:'1.2rem', marginBottom:8}}>{event.title}</h2>
-                        <p style={{fontWeight:600, fontSize:'1rem'}}>{event.date ? new Date(event.date).toLocaleString() : ''}</p>
-                        <p style={{fontSize:'0.95rem',marginBottom:12}}>{event.description}</p>
-                        {event.imageUrl && <img src={event.imageUrl} alt={event.title} style={{width:'100%',maxWidth:180,borderRadius:8,marginBottom:8}} />}
-                        {event.price && <p style={{fontWeight:700, fontSize:'1.1rem'}}>${event.price}</p>}
-                        {!isInCart(`event-${event._id}`) ? (
-                            <button
-                                type="button"
-                                onClick={(e) => { e.stopPropagation(); handleAddToCart(event); }}
-                                style={{marginTop:12,background:'#e50914',color:'#fff',border:'none',borderRadius:4,padding:'0.5rem 1.5rem',fontWeight:700,cursor:'pointer', zIndex: 2}}
-                                title="Add to Cart"
-                            >➕ Add to Cart</button>
-                        ) : (
-                            <div style={{marginTop:12,display:'flex',alignItems:'center',gap:8}}>
-                                <span style={{color:'#43ea5e',fontWeight:700}}>Added!</span>
-                                <button onClick={() => decreaseQty(`event-${event._id}`)} style={{padding:'0.3rem 0.7rem',fontWeight:700,borderRadius:4,border:'1px solid #e50914',background:'#fff',color:'#e50914',marginRight:4}} title="Decrease">➖</button>
-                                <span style={{fontWeight:700}}>{getQty(`event-${event._id}`)}</span>
-                                <button onClick={() => increaseQty(`event-${event._id}`)} style={{padding:'0.3rem 0.7rem',fontWeight:700,borderRadius:4,border:'1px solid #e50914',background:'#fff',color:'#e50914',marginLeft:4}} title="Increase">➕</button>
-                            </div>
-                        )}
-                        <ReviewSection itemId={event._id} type="event" user={user} />
+                        {event.imageUrl && <img src={event.imageUrl} alt={event.title} style={{ width: '100%', borderRadius: 8, marginBottom: 8, maxHeight: 220, objectFit: 'contain', background: '#f5f5f5', display: 'block' }} />}
+                        <h3 style={{ color: '#e50914', margin: 0 }}>{event.title}</h3>
+                        <p style={{ margin: '6px 0', fontWeight: 600 }}>{event.date ? new Date(event.date).toLocaleString() : ''}</p>
+                        <p style={{ fontSize: 15, margin: '6px 0', minHeight: 60 }}>{event.description}</p>
+                        {event.category && <p style={{ margin: '6px 0' }}><b>Category:</b> {event.category}</p>}
+                        {event.location && <p style={{ margin: '6px 0' }}><b>Location:</b> {event.location}</p>}
+                        {event.organizer && <p style={{ margin: '6px 0' }}><b>Organizer:</b> {event.organizer}</p>}
+                        {event.price && <p style={{ fontWeight: 700, margin: '8px 0', fontSize: '1.35rem', textAlign: 'center', width: '100%' }}>${event.price}</p>}
+                        <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: 12, marginBottom: 4 }}>
+                            {!isInCart(`event-${event._id}`) ? (
+                                <button onClick={() => handleAddToCart(event)} style={{ background: '#e50914', color: '#fff', border: 'none', borderRadius: 4, padding: '0.5rem 1.2rem', fontWeight: 700, cursor: 'pointer' }}>Add to Cart</button>
+                            ) : (
+                                <div style={{display:'flex',alignItems:'center',gap:8,justifyContent:'center'}}>
+                                    <span style={{color:'#43ea5e',fontWeight:700}}>Added!</span>
+                                    <button onClick={() => decreaseQty(`event-${event._id}`)} style={{padding:'0.3rem 0.7rem',fontWeight:700,borderRadius:4,border:'1px solid #e50914',background:'#fff',color:'#e50914',marginRight:4}}>-</button>
+                                    <span style={{fontWeight:700}}>{getQty(`event-${event._id}`)}</span>
+                                    <button onClick={() => increaseQty(`event-${event._id}`)} style={{padding:'0.3rem 0.7rem',fontWeight:700,borderRadius:4,border:'1px solid #e50914',background:'#fff',color:'#e50914',marginLeft:4}}>+</button>
+                                </div>
+                            )}
+                        </div>
                     </motion.div>
                 ))}
             </div>

@@ -11,11 +11,15 @@ spec:
     metadata:
       labels:
         app: merch-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "5003"
     spec:
       containers:
         - name: merch-service
-          image: merch-service:latest
-          imagePullPolicy: Never
+          image: rajatsood1/merch-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 5003
           envFrom:

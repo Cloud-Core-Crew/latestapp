@@ -1,4 +1,18 @@
 import Review from '../models/review.js';
+import client from 'prom-client';
+
+export const reviewAddCounter = new client.Counter({
+  name: 'reviews_added_total',
+  help: 'Total number of reviews added'
+});
+export const reviewEditCounter = new client.Counter({
+  name: 'reviews_edited_total',
+  help: 'Total number of reviews edited'
+});
+export const reviewDeleteCounter = new client.Counter({
+  name: 'reviews_deleted_total',
+  help: 'Total number of reviews deleted'
+});
 
 // Fetch reviews with sorting/filtering
 export const getReviews = async (req, res) => {
@@ -37,6 +51,7 @@ export const addReview = async (req, res) => {
     if (existing) return res.status(400).json({ message: 'You already reviewed this item.' });
     const review = new Review({ itemId, type, rating, comment, userId, userName });
     await review.save();
+    reviewAddCounter.inc(); // Increment review added metric
     res.json(review);
   } catch (err) {
     res.status(500).json({ message: 'Failed to add review' });
@@ -54,6 +69,7 @@ export const editReview = async (req, res) => {
     review.comment = comment;
     review.updatedAt = Date.now();
     await review.save();
+    reviewEditCounter.inc(); // Increment review edited metric
     res.json(review);
   } catch (err) {
     res.status(500).json({ message: 'Failed to edit review' });
@@ -67,6 +83,7 @@ export const deleteReview = async (req, res) => {
     if (!review) return res.status(404).json({ message: 'Review not found' });
     if (review.userId !== (req.user.id || req.user._id)) return res.status(403).json({ message: 'Forbidden' });
     await review.deleteOne();
+    reviewDeleteCounter.inc(); // Increment review deleted metric
     res.json({ message: 'Review deleted' });
   } catch (err) {
     res.status(500).json({ message: 'Failed to delete review' });

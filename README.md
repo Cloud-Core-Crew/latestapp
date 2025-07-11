@@ -2,7 +2,7 @@
 
 [![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-A full-stack, microservices-based event and merchandise platform with a Netflix-inspired UI. Built with React (Vite), Node.js microservices, MongoDB, and Docker. Supports local, Docker, and cloud (AWS) deployment.
+A full-stack, microservices-based event and merchandise platform with a Netflix-inspired UI. Built with React (Vite), Node.js microservices, MongoDB, Docker, Kubernetes, Prometheus, and Grafana. Supports local, Docker, and cloud (AWS) deployment.
 
 ---
 
@@ -21,75 +21,55 @@ A full-stack, microservices-based event and merchandise platform with a Netflix-
   - Form validation, helper text, and error messages
   - Avatars/icons for users and reviews
 - RESTful APIs for all services
+- **Observability:**
+  - Prometheus metrics endpoints on all backend services (`/metrics`)
+  - Custom business metrics (logins, orders, reviews, etc.)
+  - Grafana dashboards for business and system metrics
 - DevOps ready: Docker Compose, Kubernetes, AWS S3/CloudFront/EC2, GitHub Actions
 
 ---
 
-## Table of Contents
-- [Quick Start (Docker Compose)](#quick-start-docker-compose)
-- [Manual Local Setup](#manual-local-setup)
-- [Seeding Data](#seeding-data)
-- [Project Structure](#project-structure)
-- [Backend Services](#backend-services)
-- [Frontend](#frontend)
-- [DevOps & Deployment](#devops--deployment)
-  - [AWS S3 + CloudFront (Frontend)](#aws-s3--cloudfront-frontend)
-  - [AWS EC2 (Backend)](#aws-ec2-backend)
-  - [MongoDB Atlas](#mongodb-atlas)
-  - [CI/CD with GitHub Actions](#cicd-with-github-actions)
-- [Troubleshooting & FAQ](#troubleshooting--faq)
-- [Contributing](#contributing)
-- [License](#license)
+## Quick Start (Kubernetes)
 
----
-
-## Quick Start (Docker Compose)
-
-1. **Clone the repository:**
+1. **Build and push Docker images to Docker Hub:**
+   - Tag images as `rajatsood1/<service>:latest` for each backend service.
+   - Example:
+     ```sh
+     docker build -t rajatsood1/auth-service:latest ./backend/auth-service
+     docker push rajatsood1/auth-service:latest
+     # Repeat for all backend services
+     ```
+2. **Apply Kubernetes manifests:**
    ```sh
-   git clone <your-repo-url>
-   cd mercheventapp
+   kubectl apply -f k8s/
    ```
-2. **Copy `.env.example` to `.env` in each backend service and fill in secrets as needed.**
-3. **Build and start all services:**
+3. **Install Prometheus and Grafana (if not already):**
    ```sh
-   docker-compose up --build
+   helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+   helm repo update
+   helm install prometheus prometheus-community/kube-prometheus-stack
    ```
 4. **Access the app:**
-   - Frontend: http://localhost:5180
-   - API Gateway: http://localhost:5000
-   - All backend services: http://localhost:5001 - 5006
-   - MongoDB: localhost:27017
+   - Frontend: http://localhost:5180 (or NodePort/Ingress)
+   - Grafana: http://localhost:3000 (use `kubectl port-forward deployment/grafana 3000:3000`)
+   - Prometheus: http://localhost:9090 (use `kubectl port-forward deployment/prometheus-server 9090:9090`)
 
 ---
 
-## Manual Local Setup
+## Monitoring & Metrics
 
-1. **Install dependencies for each service:**
-   ```sh
-   cd backend/<service>
-   npm install --legacy-peer-deps
-   # Repeat for all backend services
-   cd ../../frontend
-   npm install
-   ```
-2. **Start MongoDB locally** (or use Docker Compose for MongoDB only).
-3. **Start each backend service:**
-   ```sh
-   npm start
-   ```
-4. **Start the frontend:**
-   ```sh
-   npm run dev
-   ```
-5. **Access the app at** http://localhost:5180
+- All backend services expose `/metrics` endpoints for Prometheus scraping.
+- Custom business metrics include:
+  - `auth_successful_logins_total`
+  - `orders_created_total`, `orders_cancelled_total`
+  - `reviews_added_total`, `reviews_edited_total`, `reviews_deleted_total`
+- Prometheus scrapes these endpoints and stores metrics.
+- Grafana dashboards can be created/imported to visualize business and system metrics.
 
----
-
-## Seeding Data
-
-- Use the provided seed scripts in each backend service to populate events and merchandise collections with sample data (including images and prices).
-- See each service's README for details.
+### Example: Importing a Business Metrics Dashboard
+1. In Grafana, go to **+ → Import**.
+2. Paste the provided dashboard JSON (see docs or ask your devops lead).
+3. Select your Prometheus data source (set as default if needed).
 
 ---
 
@@ -109,49 +89,13 @@ A full-stack, microservices-based event and merchandise platform with a Netflix-
 
 ---
 
-## Backend Services
-
-- Each service is a standalone Node.js app with its own `package.json` and Dockerfile.
-- All services connect to MongoDB (local or Atlas).
-- **Review-service**: Exposes advanced review APIs, now routed via the gateway at `/api/reviews`.
-- **Storage-service**: Removed (no longer part of the project).
-
----
-
-## Frontend
-
-- Built with React (Vite) and Material UI.
-- Fully theme-aware (light/dark mode, neon/dark red borders, color polish).
-- All item cards and login page use theme context for consistent appearance.
-- Review section with avatars, edit, star, sort, and vote features.
-- Material UI Skeletons for loading states.
-- Robust form validation and error handling.
-
----
-
-## DevOps & Deployment
-
-- **Docker Compose**: One command to run all services locally.
-- **Kubernetes**: Manifests for deploying to any K8s cluster.
-- **AWS S3 + CloudFront**: For static frontend hosting.
-- **AWS EC2**: For backend microservices.
-- **MongoDB Atlas**: For managed database.
-- **CI/CD**: GitHub Actions for automated builds and deploys.
-
----
-
 ## Troubleshooting & FAQ
 
-- **404 on /api/reviews**: Ensure the gateway is running and the review-service is up. The gateway proxies all `/api/reviews` requests.
-- **Theme or UI issues**: Try clearing cache or restarting the frontend. All theme logic is handled via `ThemeContext`.
-- **MongoDB connection errors**: Check your `.env` files and MongoDB instance.
-- **Git/GitHub issues**: Make sure your local branch is up-to-date with remote before pushing.
-
----
-
-## Contributing
-
-Pull requests and suggestions are welcome! For major changes, please open an issue first.
+- **Prometheus target DOWN or 401:** Ensure `/metrics` endpoints are accessible without auth (except order-service, which may require a token).
+- **Grafana dashboard empty:** Set Prometheus as the default data source in Grafana, then re-import the dashboard.
+- **Pods CrashLoopBackOff:** Check logs with `kubectl logs deployment/<service>` and ensure all required environment variables are set via ConfigMaps.
+- **Node Exporter not running:** This is expected on Docker Desktop for Windows/Mac. Ignore for local dev.
+- **MongoDB connection errors:** Check your `.env` files and MongoDB instance.
 
 ---
 

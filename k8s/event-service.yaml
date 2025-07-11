@@ -11,11 +11,15 @@ spec:
     metadata:
       labels:
         app: event-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "5002"
     spec:
       containers:
         - name: event-service
-          image: event-service:latest
-          imagePullPolicy: Never
+          image: rajatsood1/event-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 5002
           envFrom:

@@ -10,6 +10,11 @@ The **auth-service** is a microservice responsible for user authentication and m
 - JWT (JSON Web Tokens)
 - Bcrypt (for password hashing)
 - CORS (Cross-Origin Resource Sharing)
+- prom-client (Prometheus metrics)
+
+## Prometheus Metrics
+- Exposes `/metrics` endpoint for Prometheus scraping
+- Custom metric: `auth_successful_logins_total` (total successful logins)
 
 ## Setup Instructions
 
@@ -67,6 +72,10 @@ The **auth-service** is a microservice responsible for user authentication and m
 ### Protected Route Example
 - **Endpoint:** `GET /api/auth/protected`
 - **Description:** Example of a protected route that requires a valid JWT token.
+
+## Monitoring
+- Prometheus will scrape `/metrics` by default (see k8s/auth-service.yaml for annotations)
+- Visualize metrics in Grafana (see main README)
 
 ## Folder Structure
 ```

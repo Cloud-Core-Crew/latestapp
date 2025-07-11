@@ -11,11 +11,15 @@ spec:
     metadata:
       labels:
         app: gateway
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "5000"
     spec:
       containers:
         - name: gateway
-          image: gateway:latest
-          imagePullPolicy: Never
+          image: rajatsood1/gateway:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 5000
           envFrom:

@@ -2,8 +2,10 @@ const express = require('express');
 const cors = require('cors');
 const httpProxy = require('express-http-proxy');
 const logger = require('./logger');
+const client = require('prom-client');
 
 const app = express();
+const register = new client.Registry();
 
 // Middleware
 app.use(cors());
@@ -87,6 +89,14 @@ app.use((err, req, res, next) => {
         message: err.message
     });
 });
+
+// Prometheus metrics endpoint
+app.get('/metrics', async (req, res) => {
+    res.set('Content-Type', register.contentType);
+    res.end(await register.metrics());
+});
+
+client.collectDefaultMetrics({ register });
 
 const PORT = process.env.PORT || 5000;
 

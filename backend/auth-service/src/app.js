@@ -4,6 +4,7 @@ var cors = require('cors');
 var dotenv = require('dotenv');
 var authRoutes = require('./routes/authRoutes');
 const logger = require('./logger');
+const client = require('prom-client');
 
 dotenv.config();
 
@@ -40,8 +41,18 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
         process.exit(1);
     });
 
+// Create a Registry and collect default metrics
+const register = new client.Registry();
+client.collectDefaultMetrics({ register });
+
 // Routes
 app.use('/api/auth', authRoutes);
+
+// Prometheus metrics endpoint
+app.get('/metrics', async (req, res) => {
+    res.set('Content-Type', register.contentType);
+    res.end(await register.metrics());
+});
 
 // Health check
 app.get('/health', function(req, res) {

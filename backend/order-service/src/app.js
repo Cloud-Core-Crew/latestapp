@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 const orderRoutes = require('./routes/orderRoutes');
 const authMiddleware = require('./middleware/authMiddleware');
 const logger = require('./logger');
+const client = require('prom-client');
 
 dotenv.config();
 
@@ -16,6 +17,14 @@ app.use(authMiddleware);
 app.use((req, res, next) => { logger.info(`${req.method} ${req.url}`); next(); });
 
 app.use('/api/orders', orderRoutes);
+
+// Prometheus metrics endpoint
+const register = new client.Registry();
+client.collectDefaultMetrics({ register });
+app.get('/metrics', async (req, res) => {
+  res.set('Content-Type', register.contentType);
+  res.end(await register.metrics());
+});
 
 app.get('/health', (req, res) => {
   res.json({
