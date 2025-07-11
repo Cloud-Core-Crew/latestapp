@@ -1,59 +1,68 @@
 # EventMerch Frontend
 
-EventMerch is a full-stack microservices-based application designed to manage events and merchandise. This document provides an overview of the frontend setup and usage.
+EventMerch is a full-stack microservices-based application designed to manage events and merchandise. This document provides an overview of the frontend setup, features, and usage.
 
 ## Technologies Used
 
-- **React**: A JavaScript library for building user interfaces.
-- **Vite**: A build tool that provides a fast development environment.
-- **Axios**: A promise-based HTTP client for making API requests.
+- **React** (with Vite): Fast, modern UI development
+- **Material UI**: Components, Skeletons, and icons
+- **Axios**: HTTP client for API requests
+
+## Key Features
+
+- **Theme toggle**: Light/dark mode with neon/dark red borders and color polish
+- **Advanced review section**: Add, edit, delete, star, sort, and vote on reviews for events and merchandise
+- **Avatars and icons**: User and review avatars for a modern look
+- **Material UI Skeletons**: Loading states for all main pages
+- **Form validation**: Helper text and error messages for all forms
+- **Responsive design**: Works on all devices
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js (version 14 or higher)
-- npm (Node package manager)
+- Node.js (v14 or higher)
+- npm
 
 ### Installation
 
 1. Clone the repository:
-   ```
+   ```sh
    git clone <repository-url>
-   cd EventMerch/frontend
+   cd mercheventapp/frontend
    ```
-
-2. Install the dependencies:
-   ```
+2. Install dependencies:
+   ```sh
    npm install
    ```
 
 ### Running the Application
 
-To start the development server, run:
-```
+To start the development server:
+
+```sh
 npm run dev
 ```
-This will start the application on `http://localhost:3000` (or another port if 3000 is in use).
+
+The app will be available at `http://localhost:5180` (or another port if 5180 is in use).
 
 ### Folder Structure
 
-- **src**: Contains the main application code.
-  - **components**: Reusable components like Navbar.
-  - **pages**: Different pages of the application (Home, Events, Merch, Login).
-  - **services**: API service for making requests to the backend.
-  - **App.jsx**: Main application component.
-  - **main.jsx**: Entry point for the React application.
-  
-- **public**: Contains static files like `index.html`.
+- **src/**: Main application code
+  - **components/**: Navbar, ErrorBoundary, PrivateRoute, etc.
+  - **pages/**: Home, Events, Merch, Login, Cart, Checkout, Profile, Orders, OrderTracking, OrderConfirmation, Review section
+  - **services/**: API integration
+  - **contexts/**: Theme and Auth context
+  - **store/**: Redux store and slices
+- **public/**: Static files (index.html)
 
 ### API Integration
 
-The frontend communicates with the backend services through the API defined in `src/services/api.js`. Ensure that the backend services are running to interact with the frontend.
+The frontend communicates with backend services via the API gateway (`/api/*`). Ensure all backend services and the gateway are running for full functionality.
 
 ### Contributing
 
-Contributions are welcome! Please open an issue or submit a pull request for any improvements or features.
+Contributions are welcome! Please open an issue or submit a pull request for improvements or features.
 
 ### License
 

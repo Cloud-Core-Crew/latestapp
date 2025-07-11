@@ -2,16 +2,24 @@
 
 [![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-A full-stack microservices-based event and merchandise platform with a Netflix-inspired UI. Built with React (Vite), Node.js microservices, MongoDB, and Docker. Supports local, Docker, and cloud (AWS) deployment.
+A full-stack, microservices-based event and merchandise platform with a Netflix-inspired UI. Built with React (Vite), Node.js microservices, MongoDB, and Docker. Supports local, Docker, and cloud (AWS) deployment.
 
 ---
 
 ## Features
 - User authentication (JWT, register/login/logout)
-- Browse and search live events and merchandise (no hardcoded data)
+- Browse and search live events and merchandise (dynamic, no hardcoded data)
 - Add to cart, update quantities, checkout, and order tracking
 - Bulk seeding for events and merchandise (with imageUrl and price)
-- Responsive, modern UI (dark theme, grid layout, featured items)
+- **Advanced review system:**
+  - Add, edit, delete, and star reviews for events and merchandise
+  - Sort and vote on reviews (helpful/unhelpful)
+  - Review avatars and user info
+- **Modern UI/UX:**
+  - Responsive, theme-aware design (light/dark mode toggle)
+  - Neon/dark red borders, color polish, and Material UI Skeletons for loading
+  - Form validation, helper text, and error messages
+  - Avatars/icons for users and reviews
 - RESTful APIs for all services
 - DevOps ready: Docker Compose, Kubernetes, AWS S3/CloudFront/EC2, GitHub Actions
 
@@ -80,119 +88,73 @@ A full-stack microservices-based event and merchandise platform with a Netflix-i
 
 ## Seeding Data
 
-Bulk seed events and merchandise with all required fields (including `imageUrl` and `price`).
-
-- **Events:**
-  ```sh
-  curl -X POST http://localhost:5002/api/events/seed \
-    -H "Content-Type: application/json" \
-    -d '{"events": [{"name": "Cricket Match", "imageUrl": "https://...", "price": 20}, ...]}'
-  ```
-- **Merchandise:**
-  ```sh
-  curl -X POST http://localhost:5003/api/merch/seed \
-    -H "Content-Type: application/json" \
-    -d '{"merch": [{"name": "T-Shirt", "imageUrl": "https://...", "price": 15}, ...]}'
-  ```
-
-Or use PowerShell:
-```powershell
-Invoke-WebRequest -Uri http://localhost:5002/api/events/seed -Method POST -Body '{"events": [...]}' -ContentType 'application/json'
-Invoke-WebRequest -Uri http://localhost:5003/api/merch/seed -Method POST -Body '{"merch": [...]}' -ContentType 'application/json'
-```
+- Use the provided seed scripts in each backend service to populate events and merchandise collections with sample data (including images and prices).
+- See each service's README for details.
 
 ---
 
 ## Project Structure
-```
-event-merch-app/
-├── backend/
-│   ├── auth-service/
-│   ├── event-service/
-│   ├── merch-service/
-│   ├── order-service/
-│   ├── payment-service/
-│   ├── review-service/
-├── frontend/  (React + Vite)
-├── docker-compose.yml
-├── .env.example
-└── README.md
-```
+
+- `frontend/` — React (Vite) app with modern UI, theme toggle, review section, and all user features
+- `backend/` — Node.js microservices:
+  - `auth-service/` — User authentication (JWT)
+  - `event-service/` — Event management
+  - `merch-service/` — Merchandise management
+  - `order-service/` — Orders and cart
+  - `payment-service/` — Payment processing
+  - `review-service/` — Advanced review system (edit, star, sort, vote)
+  - `gateway/` — API gateway (routes all `/api/*` requests, including `/api/reviews`)
+- `k8s/` — Kubernetes manifests for all services
+- `docker-compose.yml` — Multi-service orchestration
+
+---
 
 ## Backend Services
-Each service has its own README with endpoints and environment variables.
-- **auth-service:** User registration/login, JWT
-- **event-service:** Event CRUD, seeding
-- **merch-service:** Merch CRUD, image upload, seeding
-- **order-service:** Orders
-- **payment-service:** Payments
-- **review-service:** User reviews for events and merchandise
+
+- Each service is a standalone Node.js app with its own `package.json` and Dockerfile.
+- All services connect to MongoDB (local or Atlas).
+- **Review-service**: Exposes advanced review APIs, now routed via the gateway at `/api/reviews`.
+- **Storage-service**: Removed (no longer part of the project).
+
+---
 
 ## Frontend
-- Netflix-style dark theme, carousels, and animations
-- Pages: Home, Events, Merchandise, Cart, Checkout, Login
-- Uses Framer Motion for smooth UI
+
+- Built with React (Vite) and Material UI.
+- Fully theme-aware (light/dark mode, neon/dark red borders, color polish).
+- All item cards and login page use theme context for consistent appearance.
+- Review section with avatars, edit, star, sort, and vote features.
+- Material UI Skeletons for loading states.
+- Robust form validation and error handling.
 
 ---
 
 ## DevOps & Deployment
 
-### AWS S3 + CloudFront (Frontend)
-1. **Build the frontend:**
-   ```sh
-   cd frontend
-   npm run build
-   ```
-2. **Upload `frontend/dist` to your S3 bucket.**
-   - Enable static website hosting in S3.
-   - Set index and error documents to `index.html`.
-3. **(Optional) Set up CloudFront:**
-   - Create a CloudFront distribution with your S3 bucket as the origin.
-   - Set default root object to `index.html`.
-   - (Optional) Add a custom domain and SSL via ACM.
-
-### AWS EC2 (Backend)
-1. **Launch an EC2 instance (Ubuntu recommended).**
-2. **Install Docker and Docker Compose:**
-   ```sh
-   sudo apt update && sudo apt install -y docker.io docker-compose
-   ```
-3. **Clone your repo and set up `.env` files.**
-4. **Run all backend services:**
-   ```sh
-   docker-compose up --build -d
-   ```
-5. **Open required ports in your EC2 security group (5000-5007, 27017, etc).**
-
-### MongoDB Atlas
-- Create a free cluster at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
-- Update all backend `.env` files to use your Atlas connection string.
-
-### CI/CD with GitHub Actions
-- Add a `.github/workflows/deploy.yml` for automated build/test/deploy.
-- Example steps:
-  - Build and test frontend/backend
-  - Deploy frontend to S3
-  - Deploy backend to EC2 (via SSH or ECS)
+- **Docker Compose**: One command to run all services locally.
+- **Kubernetes**: Manifests for deploying to any K8s cluster.
+- **AWS S3 + CloudFront**: For static frontend hosting.
+- **AWS EC2**: For backend microservices.
+- **MongoDB Atlas**: For managed database.
+- **CI/CD**: GitHub Actions for automated builds and deploys.
 
 ---
 
 ## Troubleshooting & FAQ
-- **Port already in use?** Stop other apps or change ports in `.env`/`docker-compose.yml`.
-- **MongoDB connection errors?** Check your connection string and network/firewall settings.
-- **CORS issues?** The gateway handles CORS; check its config if you see errors.
-- **Frontend not updating?** Rebuild with `npm run build` and re-upload to S3.
-- **Seeding not working?** Ensure backend services are running and use correct endpoint/payload.
+
+- **404 on /api/reviews**: Ensure the gateway is running and the review-service is up. The gateway proxies all `/api/reviews` requests.
+- **Theme or UI issues**: Try clearing cache or restarting the frontend. All theme logic is handled via `ThemeContext`.
+- **MongoDB connection errors**: Check your `.env` files and MongoDB instance.
+- **Git/GitHub issues**: Make sure your local branch is up-to-date with remote before pushing.
 
 ---
 
 ## Contributing
-- Fork the repo and create a feature branch.
-- Open a pull request with a clear description.
-- For major changes, open an issue first to discuss.
-- Please update tests as appropriate.
+
+Pull requests and suggestions are welcome! For major changes, please open an issue first.
 
 ---
 
 ## License
-MIT
+
+This project is licensed under the MIT License. See the LICENSE file for details.
