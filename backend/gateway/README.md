@@ -1,6 +1,16 @@
-# EventMerch Gateway Service
+# Gateway Service
 
-This document provides an overview of the EventMerch gateway service, which acts as an API gateway for routing requests to the various backend services.
+Acts as the API gateway and reverse proxy for the Event/Merch microservices app.
+
+## Environment Variables
+- `PORT`: Service port
+- Other config as needed (see `.env` and ConfigMap)
+
+## Deployment
+- Dockerized, deployed via Kubernetes manifest in `k8s/gateway.yaml`.
+
+## Notes
+- Proxies requests to backend services using Kubernetes service names.
 
 ## Overview
 

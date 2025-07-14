@@ -90,3 +90,20 @@ src/
 - Ensure MongoDB is running and accessible.
 - Use Postman or similar tools to test the API endpoints.
 - For production, consider using HTTPS and additional security measures.
+
+# Auth Service
+
+This service handles authentication (register, login, JWT) for the Event/Merch microservices app.
+
+## Environment Variables
+- `PORT`: Service port
+- `MONGO_URI`: MongoDB connection string (now managed via Kubernetes Secret)
+- `JWT_SECRET`: JWT signing secret (now managed via Kubernetes Secret)
+
+## Endpoints
+- `/api/auth/register`
+- `/api/auth/login`
+- `/api/auth/profile`
+
+## Deployment
+- Dockerized, deployed via Kubernetes manifest in `k8s/auth-service.yaml`.

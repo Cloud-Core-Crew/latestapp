@@ -1,17 +1,14 @@
 # Payment Service
 
-Handles payment simulation for EventMerch.
+Handles payment processing for the Event/Merch microservices app.
+
+## Environment Variables
+- `PORT`: Service port
+- `MONGO_URI`: MongoDB connection string (Kubernetes Secret)
+- `JWT_SECRET`: JWT signing secret (Kubernetes Secret)
 
 ## Endpoints
-- `POST /api/payments` — Simulate a payment
-- `GET /api/payments` — Get all payments
-- `/metrics` — Prometheus metrics endpoint
+- `/api/payments`
 
-## Env Variables
-- `MONGO_URI` — MongoDB connection string
-- `JWT_SECRET` — Secret for JWT signing
-- `PORT` — Service port
-
-## Monitoring
-- Prometheus scrapes `/metrics` endpoint (see k8s/payment-service.yaml)
-- Visualize metrics in Grafana (see main README)
+## Deployment
+- Dockerized, deployed via Kubernetes manifest in `k8s/payment-service.yaml`.

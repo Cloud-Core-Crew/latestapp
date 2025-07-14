@@ -1,3 +1,18 @@
+# Frontend
+
+React (Vite) frontend for the Event/Merch microservices app.
+
+## Environment Variables
+- See `.env` for API URLs and config (use public cloud/gateway URLs in production)
+
+## Build & Run
+- `npm install`
+- `npm run dev` (local)
+- Dockerized, deployed via Kubernetes manifest in `k8s/frontend.yaml`
+
+## Deployment
+- Uses Docker image and Kubernetes Service of type LoadBalancer for public access.
+
 # EventMerch Frontend
 
 EventMerch is a full-stack microservices-based application designed to manage events and merchandise. This document provides an overview of the frontend setup, features, and usage.

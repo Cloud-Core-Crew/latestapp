@@ -72,3 +72,19 @@ npm test
 
 ## License
 This project is licensed under the MIT License.
+
+# Event Service
+
+Handles event management for the Event/Merch microservices app.
+
+## Environment Variables
+- `PORT`: Service port
+- `MONGO_URI`: MongoDB connection string (Kubernetes Secret)
+- `JWT_SECRET`: JWT signing secret (Kubernetes Secret)
+
+## Endpoints
+- `/api/events`
+- `/api/events/:id`
+
+## Deployment
+- Dockerized, deployed via Kubernetes manifest in `k8s/event-service.yaml`.

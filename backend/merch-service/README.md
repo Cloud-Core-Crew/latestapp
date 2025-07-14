@@ -82,3 +82,19 @@ The Merch Service is a microservice responsible for managing merchandise related
 ## License
 
 This project is licensed under the MIT License.
+
+# Merch Service
+
+Handles merchandise management for the Event/Merch microservices app.
+
+## Environment Variables
+- `PORT`: Service port
+- `MONGO_URI`: MongoDB connection string (Kubernetes Secret)
+- `JWT_SECRET`: JWT signing secret (Kubernetes Secret)
+
+## Endpoints
+- `/api/merch`
+- `/api/merch/:id`
+
+## Deployment
+- Dockerized, deployed via Kubernetes manifest in `k8s/merch-service.yaml`.

@@ -1,17 +1,15 @@
 # Order Service
 
-Handles order creation and retrieval for EventMerch.
+Handles order placement and tracking for the Event/Merch microservices app.
+
+## Environment Variables
+- `PORT`: Service port
+- `MONGO_URI`: MongoDB connection string (Kubernetes Secret)
+- `JWT_SECRET`: JWT signing secret (Kubernetes Secret)
 
 ## Endpoints
-- `POST /api/orders` — Add a new order
-- `GET /api/orders` — Get all orders
-- `/metrics` — Prometheus metrics endpoint (orders_created_total, orders_cancelled_total)
+- `/api/orders`
+- `/api/orders/:id`
 
-## Env Variables
-- `MONGO_URI` — MongoDB connection string
-- `JWT_SECRET` — Secret for JWT signing
-- `PORT` — Service port
-
-## Monitoring
-- Prometheus scrapes `/metrics` endpoint (see k8s/order-service.yaml)
-- Visualize metrics in Grafana (see main README)
+## Deployment
+- Dockerized, deployed via Kubernetes manifest in `k8s/order-service.yaml`.
