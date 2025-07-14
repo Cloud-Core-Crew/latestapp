@@ -6,8 +6,14 @@ Acts as the API gateway and reverse proxy for the Event/Merch microservices app.
 - `PORT`: Service port
 - Other config as needed (see `.env` and ConfigMap)
 
-## Deployment
+## Deployment & DevOps
 - Dockerized, deployed via Kubernetes manifest in `k8s/gateway.yaml`.
+- Docker image built and pushed via GitHub Actions CI/CD.
+- Deployed to AWS EKS and exposed via LoadBalancer service.
+- Uses Kubernetes service names for backend routing.
+
+## Monitoring & Logging
+- (Recommended) Integrate with Prometheus/Grafana and centralized logging for production.
 
 ## Notes
 - Proxies requests to backend services using Kubernetes service names.

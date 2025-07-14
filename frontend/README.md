@@ -10,8 +10,13 @@ React (Vite) frontend for the Event/Merch microservices app.
 - `npm run dev` (local)
 - Dockerized, deployed via Kubernetes manifest in `k8s/frontend.yaml`
 
-## Deployment
-- Uses Docker image and Kubernetes Service of type LoadBalancer for public access.
+## Deployment & DevOps
+- Docker image built and pushed via GitHub Actions CI/CD.
+- Deployed to AWS EKS via Kubernetes manifest.
+- Publicly accessible via LoadBalancer service.
+
+## Monitoring & Logging
+- (Recommended) Integrate with Prometheus/Grafana and centralized logging for production.
 
 # EventMerch Frontend
 
