@@ -102,6 +102,7 @@ const Events = withAuthUser(({ user }) => {
                                 </div>
                             )}
                         </div>
+                        <ReviewSection itemId={event._id} type="event" user={user} />
                     </motion.div>
                 ))}
             </div>

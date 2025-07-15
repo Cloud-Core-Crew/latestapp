@@ -25,6 +25,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: payment-service-config
+            - secretRef:
+                name: payment-service-secret
 ---
 apiVersion: v1
 kind: Service

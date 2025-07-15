@@ -41,3 +41,6 @@ backend/*/build/
 # .env
 # .env.local
 # .env.*.local
+
+# Ignore all .env files
+**/.env

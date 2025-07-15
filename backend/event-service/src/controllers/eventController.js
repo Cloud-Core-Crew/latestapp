@@ -3,8 +3,8 @@ const Event = require('../models/event');
 // Add a new event
 exports.addEvent = async (req, res) => {
     try {
-        const { title, date, description } = req.body;
-        const newEvent = new Event({ title, date, description });
+        const { title, date, description, imageUrl, price } = req.body;
+        const newEvent = new Event({ title, date, description, imageUrl, price });
         await newEvent.save();
         res.status(201).json({ message: 'Event created successfully', event: newEvent });
     } catch (error) {
@@ -34,5 +34,18 @@ exports.seedEvents = async (req, res) => {
         res.status(201).json({ message: 'Custom events seeded', events: inserted });
     } catch (error) {
         res.status(500).json({ message: 'Error seeding events', error: error.message });
+    }
+};
+
+// Delete all events
+exports.deleteAllEvents = async (req, res) => {
+    console.log('DELETE /api/events called');
+    try {
+        await Event.deleteMany({});
+        console.log('All events deleted');
+        res.status(200).json({ message: 'All events deleted' });
+    } catch (error) {
+        console.error('Error deleting events:', error);
+        res.status(500).json({ message: 'Error deleting events', error: error.message });
     }
 };

@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: frontend:latest
-          imagePullPolicy: Never
+          image: rajatsood1/frontend:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 5180
 ---
@@ -30,4 +30,4 @@ spec:
     - protocol: TCP
       port: 5180
       targetPort: 5180
-  type: NodePort
+  type: LoadBalancer

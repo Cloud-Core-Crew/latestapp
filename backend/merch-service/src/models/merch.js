@@ -13,6 +13,10 @@ const merchSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    description: {
+        type: String,
+        required: false,
+    },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Merch', merchSchema);

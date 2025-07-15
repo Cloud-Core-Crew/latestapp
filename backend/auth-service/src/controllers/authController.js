@@ -64,6 +64,7 @@ exports.login = function(req, res) {
         }
 
         console.log('Found user:', user);
+        console.log('Comparing password:', password, 'with hash:', user.password);
         user.comparePassword(password, function(err, isMatch) {
             if (err) {
                 console.error('Password comparison error:', err);

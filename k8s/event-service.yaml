@@ -25,6 +25,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: event-service-config
+            - secretRef:
+                name: event-service-secret
 ---
 apiVersion: v1
 kind: Service

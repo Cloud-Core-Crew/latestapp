@@ -8,9 +8,14 @@ const app = express();
 const register = new client.Registry();
 
 // Middleware
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+const corsOptions = {
+  origin: '*', // Allow all origins; for production, specify your frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: false
+};
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 // Add logging middleware
 app.use((req, res, next) => {
@@ -19,7 +24,7 @@ app.use((req, res, next) => {
 });
 
 // Proxy configuration
-const authProxy = httpProxy('http://localhost:5001', {
+const authProxy = httpProxy('http://auth-service:5001', {
     proxyReqPathResolver: (req) => '/api/auth' + req.url,
     onError: (err, req, res) => {
         console.error('Auth proxy error:', err);
@@ -30,7 +35,7 @@ const authProxy = httpProxy('http://localhost:5001', {
     }
 });
 
-const ordersProxy = httpProxy('http://localhost:5004', {
+const ordersProxy = httpProxy('http://order-service:5004', {
     proxyReqPathResolver: (req) => '/api/orders' + req.url,
     onError: (err, req, res) => {
         console.error('Orders proxy error:', err);
@@ -41,7 +46,7 @@ const ordersProxy = httpProxy('http://localhost:5004', {
     }
 });
 
-const eventsProxy = httpProxy('http://localhost:5002', {
+const eventsProxy = httpProxy('http://event-service:5002', {
     proxyReqPathResolver: (req) => req.originalUrl, // Forward full /api/events path
     onError: (err, req, res) => {
         console.error('Events proxy error:', err);
@@ -52,7 +57,7 @@ const eventsProxy = httpProxy('http://localhost:5002', {
     }
 });
 
-const merchProxy = httpProxy('http://localhost:5003', {
+const merchProxy = httpProxy('http://merch-service:5003', {
     proxyReqPathResolver: (req) => req.originalUrl, // Forward full /api/merch path
     onError: (err, req, res) => {
         console.error('Merch proxy error:', err);
@@ -63,7 +68,7 @@ const merchProxy = httpProxy('http://localhost:5003', {
     }
 });
 
-const reviewsProxy = httpProxy('http://localhost:5006', {
+const reviewsProxy = httpProxy('http://review-service:5006', {
     proxyReqPathResolver: (req) => req.originalUrl, // Forward full /api/reviews path
     onError: (err, req, res) => {
         console.error('Reviews proxy error:', err);

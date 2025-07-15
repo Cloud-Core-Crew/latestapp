@@ -25,6 +25,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: review-service-config
+            - secretRef:
+                name: review-service-secret
 ---
 apiVersion: v1
 kind: Service

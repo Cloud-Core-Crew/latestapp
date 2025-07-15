@@ -25,6 +25,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: merch-service-config
+            - secretRef:
+                name: merch-service-secret
 ---
 apiVersion: v1
 kind: Service

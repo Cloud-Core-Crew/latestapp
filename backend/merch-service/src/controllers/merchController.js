@@ -3,11 +3,14 @@ const Merch = require('../models/merch');
 // Add new merchandise
 exports.addMerch = async (req, res) => {
     try {
-        const { name, price, imageUrl } = req.body;
-        const newMerch = new Merch({ name, price, imageUrl });
+        console.log('addMerch called', req.body);
+        const { name, price, imageUrl, description } = req.body;
+        const newMerch = new Merch({ name, price, imageUrl, description });
         await newMerch.save();
+        console.log('Merch saved', newMerch);
         res.status(201).json(newMerch);
     } catch (error) {
+        console.error('Error adding merch:', error);
         res.status(500).json({ message: 'Error adding merchandise', error });
     }
 };

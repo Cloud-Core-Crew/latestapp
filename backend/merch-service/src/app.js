@@ -22,6 +22,7 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 
 // Routes
 app.use('/api/merch', merchRoutes);
+app.use('/api/merch/', merchRoutes); // Handle trailing slash
 
 // Prometheus metrics endpoint
 app.get('/metrics', async (req, res) => {

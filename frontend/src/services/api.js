@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000'; // Gateway service handles all API routes
+const API_URL = 'http://aa7d1147bffc04d10a0296b0cd446657-1900129153.us-east-1.elb.amazonaws.com:5000'; // Gateway service handles all API routes
 
 const api = axios.create({
   baseURL: API_URL,

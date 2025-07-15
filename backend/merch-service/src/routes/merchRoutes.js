@@ -3,7 +3,7 @@ const router = express.Router();
 const merchController = require('../controllers/merchController');
 
 // Route to add merchandise
-router.post('/merch', merchController.addMerch);
+router.post('/', merchController.addMerch);
 
 // Route to get all merchandise
 router.get('/', merchController.getAllMerch);
