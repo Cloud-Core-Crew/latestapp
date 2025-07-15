@@ -25,6 +25,38 @@ jobs:
           username: ${{ env.DOCKERHUB_USERNAME }}
           password: ${{ env.DOCKERHUB_TOKEN }}
 
+      - name: Create .env files for all services
+        run: |
+          echo "PORT=5000" > backend/gateway/.env
+          echo "MONGO_URI=${{ secrets.GATEWAY_MONGO_URI }}" >> backend/gateway/.env
+          echo "JWT_SECRET=${{ secrets.GATEWAY_JWT_SECRET }}" >> backend/gateway/.env
+
+          echo "PORT=5001" > backend/auth-service/.env
+          echo "MONGO_URI=${{ secrets.AUTH_MONGO_URI }}" >> backend/auth-service/.env
+          echo "JWT_SECRET=${{ secrets.AUTH_JWT_SECRET }}" >> backend/auth-service/.env
+
+          echo "PORT=5002" > backend/event-service/.env
+          echo "MONGO_URI=${{ secrets.EVENT_MONGO_URI }}" >> backend/event-service/.env
+          echo "JWT_SECRET=${{ secrets.EVENT_JWT_SECRET }}" >> backend/event-service/.env
+
+          echo "PORT=5003" > backend/merch-service/.env
+          echo "MONGO_URI=${{ secrets.MERCH_MONGO_URI }}" >> backend/merch-service/.env
+          echo "JWT_SECRET=${{ secrets.MERCH_JWT_SECRET }}" >> backend/merch-service/.env
+
+          echo "PORT=5004" > backend/order-service/.env
+          echo "MONGO_URI=${{ secrets.ORDER_MONGO_URI }}" >> backend/order-service/.env
+          echo "JWT_SECRET=${{ secrets.ORDER_JWT_SECRET }}" >> backend/order-service/.env
+
+          echo "PORT=5005" > backend/payment-service/.env
+          echo "MONGO_URI=${{ secrets.PAYMENT_MONGO_URI }}" >> backend/payment-service/.env
+          echo "JWT_SECRET=${{ secrets.PAYMENT_JWT_SECRET }}" >> backend/payment-service/.env
+
+          echo "PORT=5006" > backend/review-service/.env
+          echo "MONGO_URI=${{ secrets.REVIEW_MONGO_URI }}" >> backend/review-service/.env
+          echo "JWT_SECRET=${{ secrets.REVIEW_JWT_SECRET }}" >> backend/review-service/.env
+
+          echo "VITE_API_URL=${{ secrets.FRONTEND_API_URL }}" > frontend/.env
+
       - name: Build and push auth-service
         uses: docker/build-push-action@v5
         with:
