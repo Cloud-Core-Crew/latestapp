@@ -104,7 +104,11 @@ export const fetchOrders = async () => {
 };
 
 export const cancelOrder = async (orderId) => {
-  const response = await api.patch(`/api/orders/${orderId}/cancel`, {});
+  const token = localStorage.getItem('token');
+  if (!token) return Promise.reject(new Error('No token found'));
+  const response = await api.patch(`/api/orders/${orderId}/cancel`, {}, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
   return response.data;
 };
 
