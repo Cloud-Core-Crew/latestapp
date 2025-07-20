@@ -29,6 +29,9 @@ This repository contains a full-stack microservices application for event and me
 - **Public Access:**
   - Frontend and gateway are exposed via Kubernetes Services of type LoadBalancer.
 
+## GitLab CI/CD
+This project now supports GitLab CI/CD for automated Docker builds and EKS deployment. See `.gitlab-ci.yml` for pipeline details. Add all required secrets in GitLab project settings under CI/CD > Variables.
+
 ## Getting Started
 See individual service and frontend READMEs for details on local development, environment variables, and endpoints.
 
