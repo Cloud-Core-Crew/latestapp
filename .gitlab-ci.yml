@@ -1,0 +1,78 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  DOCKER_REGISTRY: docker.io
+  DOCKERHUB_USERNAME: $DOCKERHUB_USERNAME
+  DOCKERHUB_TOKEN: $DOCKERHUB_TOKEN
+  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+  AWS_REGION: $AWS_REGION
+  EKS_CLUSTER_NAME: $EKS_CLUSTER_NAME
+
+before_script:
+  # Create .env files for all services
+  - echo "PORT=5000" > backend/gateway/.env
+  - echo "MONGO_URI=$GATEWAY_MONGO_URI" >> backend/gateway/.env
+  - echo "JWT_SECRET=$GATEWAY_JWT_SECRET" >> backend/gateway/.env
+  - echo "PORT=5001" > backend/auth-service/.env
+  - echo "MONGO_URI=$AUTH_MONGO_URI" >> backend/auth-service/.env
+  - echo "JWT_SECRET=$AUTH_JWT_SECRET" >> backend/auth-service/.env
+  - echo "PORT=5002" > backend/event-service/.env
+  - echo "MONGO_URI=$EVENT_MONGO_URI" >> backend/event-service/.env
+  - echo "JWT_SECRET=$EVENT_JWT_SECRET" >> backend/event-service/.env
+  - echo "PORT=5003" > backend/merch-service/.env
+  - echo "MONGO_URI=$MERCH_MONGO_URI" >> backend/merch-service/.env
+  - echo "JWT_SECRET=$MERCH_JWT_SECRET" >> backend/merch-service/.env
+  - echo "PORT=5004" > backend/order-service/.env
+  - echo "MONGO_URI=$ORDER_MONGO_URI" >> backend/order-service/.env
+  - echo "JWT_SECRET=$ORDER_JWT_SECRET" >> backend/order-service/.env
+  - echo "PORT=5005" > backend/payment-service/.env
+  - echo "MONGO_URI=$PAYMENT_MONGO_URI" >> backend/payment-service/.env
+  - echo "JWT_SECRET=$PAYMENT_JWT_SECRET" >> backend/payment-service/.env
+  - echo "PORT=5006" > backend/review-service/.env
+  - echo "MONGO_URI=$REVIEW_MONGO_URI" >> backend/review-service/.env
+  - echo "JWT_SECRET=$REVIEW_JWT_SECRET" >> backend/review-service/.env
+  - echo "VITE_API_URL=$FRONTEND_API_URL" > frontend/.env
+
+build_and_push:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - echo $DOCKERHUB_TOKEN | docker login -u $DOCKERHUB_USERNAME --password-stdin $DOCKER_REGISTRY
+    - docker build -t $DOCKERHUB_USERNAME/auth-service:latest ./backend/auth-service
+    - docker push $DOCKERHUB_USERNAME/auth-service:latest
+    - docker build -t $DOCKERHUB_USERNAME/event-service:latest ./backend/event-service
+    - docker push $DOCKERHUB_USERNAME/event-service:latest
+    - docker build -t $DOCKERHUB_USERNAME/merch-service:latest ./backend/merch-service
+    - docker push $DOCKERHUB_USERNAME/merch-service:latest
+    - docker build -t $DOCKERHUB_USERNAME/order-service:latest ./backend/order-service
+    - docker push $DOCKERHUB_USERNAME/order-service:latest
+    - docker build -t $DOCKERHUB_USERNAME/payment-service:latest ./backend/payment-service
+    - docker push $DOCKERHUB_USERNAME/payment-service:latest
+    - docker build -t $DOCKERHUB_USERNAME/review-service:latest ./backend/review-service
+    - docker push $DOCKERHUB_USERNAME/review-service:latest
+    - docker build -t $DOCKERHUB_USERNAME/gateway:latest ./backend/gateway
+    - docker push $DOCKERHUB_USERNAME/gateway:latest
+    - docker build -t $DOCKERHUB_USERNAME/frontend:latest ./frontend
+    - docker push $DOCKERHUB_USERNAME/frontend:latest
+
+  only:
+    - main
+
+deploy_to_eks:
+  stage: deploy
+  image: bitnami/kubectl:latest
+  script:
+    - apk add --no-cache curl python3 py3-pip
+    - pip3 install awscli
+    - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+    - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+    - aws configure set default.region $AWS_REGION
+    - aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER_NAME
+    - kubectl apply -f k8s/
+  only:
+    - main
